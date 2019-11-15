@@ -99,11 +99,11 @@ Sub addPartij(location As String, beurten As String, caroms As String, moyenne A
 	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, DateTime.Now, CallSub(nieuwe_partij, "retDiscipId")))
 End Sub
 
-Sub retPartijen As Cursor
+Sub retPartijen(id As String) As Cursor
 	initDb
 	
-	qry = "select * from partijen order by date_time"
-	curs = sql.ExecQuery(qry)
+	qry = "select * from partijen where discipline_id=? order by date_time"
+	curs = sql.ExecQuery2(qry, Array As String(id))
 	Return curs
 End Sub
 

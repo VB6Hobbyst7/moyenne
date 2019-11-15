@@ -35,7 +35,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("nieuwe_partij")
 	clsDbe.Initialize
 	getDisciplines
-	txt_locatie.RequestFocus
+	'txt_locatie.RequestFocus
 End Sub
 
 Sub Activity_Resume
