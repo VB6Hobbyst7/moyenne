@@ -12,20 +12,14 @@ Version=9.5
 
 
 Sub Process_Globals
-	Private disciId As String
 	Private curs As Cursor
-	Private oldValue As String
 End Sub
 
 
 Sub Globals
 	Private ime As IME
-	Private lbl_discipline As Label
-	Private txt_discipline As EditText
-	Private btn_save As Button
 	Private pnl_discipline As Panel
 	Private lbl_discipline_header As Label
-	Private btn_new As ACButton
 	Private clsdbe As clsDb
 	Private clsFunc As clsFunctions
 	Private clv_discipline As CustomListView
@@ -34,6 +28,7 @@ Sub Globals
 	Private txt_discipline_edit As EditText
 	Private lbl_edit As Label
 	Private lbl_add As Label
+	Private lbl_disciplines_found As Label
 End Sub
 
 
@@ -57,30 +52,8 @@ Sub Activity_Pause (UserClosed As Boolean)
 End Sub
 
 
-Sub btn_save_Click
-	clsdbe.addDiscipline(txt_discipline.Text, disciId)
-	clsdbe.closeConnection
-End Sub
-
-
 Sub txt_discipline_FocusChanged (HasFocus As Boolean)
 	
-End Sub
-
-
-Sub txt_discipline_TextChanged (Old As String, New As String)
-	If Old.Length > 0 And oldValue = "" Then
-		oldValue = Old	
-	Else 
-		Return	
-	End If
-	
-	btn_new.Text = "Annuleer"
-	If New.Length = 0 Then
-		btn_save.Enabled = False
-	Else
-		btn_save.Enabled = Old <> New
-	End If
 End Sub
 
 
@@ -95,6 +68,7 @@ Sub createDisciplineList
 		clv_discipline.Add(genDisciplineList(curs.GetString("discipline"), curs.GetString("id"), clv_discipline.AsView.Width), "")
 	Next
 	curs.Close
+	countDisciplines
 End Sub
 
 
@@ -108,13 +82,6 @@ Sub genDisciplineList(disci As String, id As String, width As Int) As Panel
 	lbl_discipline_header.Tag = "disci"
 	p.Tag = id
 	Return p
-End Sub
-
-
-Sub btn_new_Click
-	Dim label As Label
-	label.Initialize("")
-	addEdit(False, label, "")
 End Sub
 
 
@@ -157,6 +124,7 @@ Sub lbl_delete_Click
 	If response = DialogResponse.POSITIVE Then
 		removeItem(index)
 	End If
+	countDisciplines
 End Sub
 
 
@@ -195,9 +163,12 @@ Sub addEdit(edit As Boolean, label As Label, id As String)
 		End If
 	End If
 	ime.HideKeyboard
+	countDisciplines
 End Sub
 
-
+Sub countDisciplines
+	lbl_disciplines_found.Text = $"Disciplines (${clv_discipline.Size})"$
+End Sub
 
 Sub lbl_add_Click
 	Dim label As Label

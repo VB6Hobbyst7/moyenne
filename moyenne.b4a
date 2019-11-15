@@ -16,21 +16,20 @@ FileGroup7=Default Group
 Group=Default Group
 IconFile=
 Library1=core
-Library2=appcompat
-Library3=javaobject
-Library4=sql
-Library5=runtimepermissions
-Library6=ime
-Library7=xcustomlistview
-Library8=xui views
-Library9=dialogs
+Library2=javaobject
+Library3=sql
+Library4=runtimepermissions
+Library5=ime
+Library6=xcustomlistview
+Library7=xui views
+Library8=dialogs
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
 Module1=Starter
 Module2=discipline
 Module3=clsFunctions
 Module4=clsDb
 NumberOfFiles=7
-NumberOfLibraries=9
+NumberOfLibraries=8
 NumberOfModules=4
 Version=9.5
 @EndOfDesignText@
@@ -42,7 +41,7 @@ Version=9.5
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
 #End Region
-#AdditionalJar: com.android.support:support-compat
+'#AdditionalJar: com.android.support:support-compat
 #Region  Activity Attributes 
 #FullScreen: True
 	#IncludeTitle: False
