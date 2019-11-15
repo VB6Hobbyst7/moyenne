@@ -9,6 +9,7 @@ Sub Class_Globals
 	Private sql As SQL
 	Private curs As Cursor
 	Private qry As String
+	Dim clsFunc As clsFunctions
 End Sub
 
 
@@ -16,6 +17,7 @@ Public Sub Initialize
 	If File.Exists(Starter.share, db) = False Then
 		File.Copy(File.DirAssets, db, Starter.share, db)
 	End If
+	clsFunc.Initialize
 End Sub
 
 
@@ -90,5 +92,19 @@ End Sub
 
 
 #Region partijen
+
+Sub addPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String)
+	initDb
+	qry = "insert into partijen (id, location, beurten, caroms, moyenne, opponent, caroms_opponent, moyenne_opponent, date_time, discipline_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, DateTime.Now, CallSub(nieuwe_partij, "retDiscipId")))
+End Sub
+
+Sub retPartijen As Cursor
+	initDb
+	
+	qry = "select * from partijen order by date_time"
+	curs = sql.ExecQuery(qry)
+	Return curs
+End Sub
 
 #End Region

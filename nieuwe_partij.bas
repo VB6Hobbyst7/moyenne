@@ -64,7 +64,11 @@ End Sub
 
 
 Sub spr_discipline_ItemClick (Position As Int, Value As Object)
-	Log(spr_list.Get(Position))
+	discip = spr_list.Get(Position)
+End Sub
+
+Sub retDiscipId As String
+	Return discip
 End Sub
 
 
@@ -115,5 +119,5 @@ Sub txt_caroms_tegen_FocusChanged (HasFocus As Boolean)
 End Sub
 
 Sub btn_save_Click
-	
+	clsDbe.addPartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text)
 End Sub

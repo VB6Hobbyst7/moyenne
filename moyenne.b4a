@@ -1,21 +1,23 @@
 ﻿Build1=Default,nl.pdeg.moyenne
 File1=clv_discipline.bal
-File2=discipline.bal
-File3=discipline_edit.bal
-File4=Montserrat-Bold.ttf
-File5=Montserrat-Regular.ttf
-File6=Montserrat-SemiBold.ttf
-File7=moyenne.db
-File8=nieuwe_partij.bal
-File9=partij_lijst.bal
+File10=partij_lijst.bal
+File2=clv_partijen.bal
+File3=discipline.bal
+File4=discipline_edit.bal
+File5=Montserrat-Bold.ttf
+File6=Montserrat-Regular.ttf
+File7=Montserrat-SemiBold.ttf
+File8=moyenne.db
+File9=nieuwe_partij.bal
 FileGroup1=discipline
-FileGroup2=discipline
+FileGroup10=partijen
+FileGroup2=partijen
 FileGroup3=discipline
-FileGroup4=font
+FileGroup4=discipline
 FileGroup5=font
 FileGroup6=font
-FileGroup7=Default Group
-FileGroup8=partijen
+FileGroup7=font
+FileGroup8=Default Group
 FileGroup9=partijen
 Group=Default Group
 IconFile=
@@ -34,7 +36,7 @@ Module3=discipline
 Module4=Starter
 Module5=clsFunctions
 Module6=partijen
-NumberOfFiles=9
+NumberOfFiles=10
 NumberOfLibraries=8
 NumberOfModules=6
 Version=9.5
@@ -62,14 +64,14 @@ End Sub
 Sub Globals
 	'These global variables will be redeclared each time the activity is created.
 	'These variables can only be accessed from this module.
-
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	'Do not forget to load the layout file created with the visual designer. For example:
 	'Activity.LoadLayout("Layout1")
 	'StartActivity(discipline)
-	StartActivity(nieuwe_partij)
+	'StartActivity(nieuwe_partij)
+	StartActivity(partijen)
 
 End Sub
 
