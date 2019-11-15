@@ -25,7 +25,17 @@ Sub initDb
 	End If
 End Sub
 
+Sub closeConnection
+	If sql.IsInitialized Then
+		sql.Close
+	End If
+	If curs.IsInitialized Then
+		curs.Close
+	End If
+End Sub
 
+
+#Region discipline
 Sub addDiscipline(disc As String, disciId As String)
 	initDb
 	If disciplineExists(disc) = True Then
@@ -50,9 +60,6 @@ Sub deleteDiscipline(id As String)
 	sql.ExecNonQuery2(qry, Array As String(id))
 End Sub
 
-
-
-
 Sub disciplineExists(disc As String) As Boolean
 	initDb
 	qry = "select count(*) as result from disciplines where discipline = ?"
@@ -61,25 +68,27 @@ Sub disciplineExists(disc As String) As Boolean
 	curs.Position = 0
 	If curs.GetInt("result") > 0 Then
 		Return True
-		End If
+	End If
 	Return False
 End Sub
-
-
-Sub closeConnection
-	If sql.IsInitialized Then
-		sql.Close
-	End If
-	If curs.IsInitialized Then
-		curs.Close
-	End If
-End Sub
-
 
 Sub lstDisciplines As Cursor
 	initDb
 	qry = "select discipline, id from disciplines order by discipline"
 	curs = sql.ExecQuery(qry)
 	Return curs
-	
 End Sub
+
+Sub retDisciplines As Cursor
+	initDb
+	
+	qry = "select * from disciplines order by discipline"
+	curs = sql.ExecQuery(qry)
+	Return curs
+End Sub
+#End Region 
+
+
+#Region partijen
+
+#End Region
