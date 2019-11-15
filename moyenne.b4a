@@ -1,0 +1,76 @@
+﻿Build1=Default,nl.pdeg.moyenne
+File1=clv_discipline.bal
+File2=discipline.bal
+File3=discipline_edit.bal
+File4=Montserrat-Bold.ttf
+File5=Montserrat-Regular.ttf
+File6=Montserrat-SemiBold.ttf
+File7=moyenne.db
+FileGroup1=discipline
+FileGroup2=discipline
+FileGroup3=discipline
+FileGroup4=font
+FileGroup5=font
+FileGroup6=font
+FileGroup7=Default Group
+Group=Default Group
+IconFile=
+Library1=core
+Library2=appcompat
+Library3=javaobject
+Library4=sql
+Library5=runtimepermissions
+Library6=ime
+Library7=xcustomlistview
+Library8=xui views
+Library9=dialogs
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
+Module1=Starter
+Module2=discipline
+Module3=clsFunctions
+Module4=clsDb
+NumberOfFiles=7
+NumberOfLibraries=9
+NumberOfModules=4
+Version=9.5
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Mijn Moyenne
+	#VersionCode: 1
+	#VersionName: 0
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+#End Region
+#AdditionalJar: com.android.support:support-compat
+#Region  Activity Attributes 
+#FullScreen: True
+	#IncludeTitle: False
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	'These variables can only be accessed from this module.
+
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	'Do not forget to load the layout file created with the visual designer. For example:
+	'Activity.LoadLayout("Layout1")
+	StartActivity(discipline)
+
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
