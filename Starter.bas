@@ -14,6 +14,8 @@ Sub Process_Globals
 	Dim clsDbe As clsDb
 	Dim rp As RuntimePermissions
 	Public share As String
+	Public yearForChart As String
+	Public disciplineForChart, disciplineName As String
 End Sub
 
 Sub Service_Create

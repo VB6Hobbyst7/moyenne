@@ -1,6 +1,7 @@
 ﻿Build1=Default,nl.pdeg.moyenne
 File1=clv_discipline.bal
-File10=partij_lijst.bal
+File10=partij_chart.bal
+File11=partij_lijst.bal
 File2=clv_partijen.bal
 File3=discipline.bal
 File4=discipline_edit.bal
@@ -11,6 +12,7 @@ File8=moyenne.db
 File9=nieuwe_partij.bal
 FileGroup1=discipline
 FileGroup10=partijen
+FileGroup11=partijen
 FileGroup2=partijen
 FileGroup3=discipline
 FileGroup4=discipline
@@ -29,16 +31,18 @@ Library5=ime
 Library6=xcustomlistview
 Library7=xui views
 Library8=dialogs
+Library9=xchart
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
 Module1=discipline
 Module2=nieuwe_partij
 Module3=clsDb
 Module4=partijen
 Module5=Starter
-Module6=clsFunctions
-NumberOfFiles=10
-NumberOfLibraries=8
-NumberOfModules=6
+Module6=partij_chart
+Module7=clsFunctions
+NumberOfFiles=11
+NumberOfLibraries=9
+NumberOfModules=7
 Version=9.5
 @EndOfDesignText@
 #Region  Project Attributes 
@@ -51,7 +55,7 @@ Version=9.5
 #End Region
 '#AdditionalJar: com.android.support:support-compat
 #Region  Activity Attributes 
-#FullScreen: True
+    #FullScreen: True
 	#IncludeTitle: False
 #End Region
 

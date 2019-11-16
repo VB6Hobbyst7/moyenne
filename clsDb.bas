@@ -10,6 +10,8 @@ Sub Class_Globals
 	Private curs As Cursor
 	Private qry As String
 	Dim clsFunc As clsFunctions
+	
+	
 End Sub
 
 
@@ -94,17 +96,46 @@ End Sub
 #Region partijen
 
 Sub addPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String)
+	Dim month, year As Int
+	
+	month = DateTime.GetMonth(DateTime.Now)
+	year = DateTime.GetYear(DateTime.Now)
+	
 	initDb
-	qry = "insert into partijen (id, location, beurten, caroms, moyenne, opponent, caroms_opponent, moyenne_opponent, date_time, discipline_id) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, DateTime.Now, CallSub(nieuwe_partij, "retDiscipId")))
+	qry = "insert into partijen (id, location, beurten, caroms, moyenne, opponent, caroms_opponent, moyenne_opponent, date_time, discipline_id, month, year) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, DateTime.Now, CallSub(nieuwe_partij, "retDiscipId"), month, year))
 End Sub
 
-Sub retPartijen(id As String) As Cursor
+Sub retPartijen(id As String, year As String) As Cursor
 	initDb
 	
-	qry = "select * from partijen where discipline_id=? order by date_time"
-	curs = sql.ExecQuery2(qry, Array As String(id))
+	qry = "select * from partijen where discipline_id=? and year=? order by date_time"
+	curs = sql.ExecQuery2(qry, Array As String(id, year))
+	Return curs
+End Sub
+
+Sub UniqueYears As Cursor
+	initDb
+	qry = "select distinct year from partijen where year IS NOT NULL order by year DESC"
+	curs = sql.ExecQuery(qry)
+	Return curs
+	
+End Sub
+
+
+Sub genMoyenneMonthCurrYear(year As Int) As Cursor
+	initDb
+	qry = "select month, avg(moyenne) As avg_gem, year from partijen where discipline_id=? and year=? group by month, year order by month"
+	curs = sql.ExecQuery2(qry, Array As String(Starter.disciplineForChart, year))
+	Return curs
+End Sub
+
+Sub genMoyenneMonthPrevYear(year As Int) As Cursor
+	initDb
+	qry = "select month, avg(moyenne) As avg_gem, year from partijen where discipline_id=? and year=? group by month, year order by month"
+	curs = sql.ExecQuery2(qry, Array As String(Starter.disciplineForChart, year))
 	Return curs
 End Sub
 
 #End Region
+

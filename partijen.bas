@@ -37,12 +37,15 @@ Sub Globals
 	
 	Private lbl_discipline_moyenne As Label
 	Private lbl_delete As Label
+	Private spr_year As Spinner
+	Private lbl_chart As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("partij_lijst")
 	clsDbe.Initialize
 	getDisciplines
+	getYears
 	createPartijList
 	countPartijen
 End Sub
@@ -68,13 +71,13 @@ Sub createPartijList
 	totMoyenne = 0
 	totaal = 0
 	DateTime.DateFormat ="dd-MMMM-yyyy"
-	curs = clsDbe.retPartijen(discip)
+	curs = clsDbe.retPartijen(discip, spr_year.SelectedItem)
 	clv_partijen.Clear
 	For i = 0 To curs.RowCount -1
 		curs.Position = i
 		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), curs.GetString("moyenne_opponent"), curs.GetLong("date_time"), curs.GetLong("id"), clv_partijen.AsView.Width), "")
 	Next
-	Log($"Tot. Gem : ${totMoyenne/totaal}"$)
+	
 	If totMoyenne > 0 And totaal > 0 Then
 		lbl_discipline_moyenne.Text = "Discipline gemiddelde : " & NumberFormat2(totMoyenne/totaal,1,3,3,False)
 	Else 	
@@ -121,6 +124,22 @@ Sub getDisciplines
 End Sub
 
 
+Sub getYears
+	curs = clsDbe.UniqueYears
+	If curs.RowCount < 1 Then
+		spr_year.Add(DateTime.GetYear(DateTime.Now))
+		Return
+	End If
+	
+	For i = 0 To curs.RowCount -1
+		curs.Position = i
+		spr_year.Add(curs.GetString("year"))
+	Next
+	clsDbe.closeConnection
+	curs.Close
+	
+End Sub
+
 Sub spr_discipline_ItemClick (Position As Int, Value As Object)
 	discip = spr_list.Get(Position)
 	createPartijList
@@ -132,4 +151,15 @@ End Sub
 
 Sub lbl_delete_Click
 	
+End Sub
+
+Sub spr_year_ItemClick (Position As Int, Value As Object)
+	createPartijList
+End Sub
+
+Sub lbl_chart_Click
+	Starter.yearForChart = spr_year.SelectedItem
+	Starter.disciplineForChart = spr_list.Get(spr_discipline.SelectedIndex)
+	Starter.disciplineName = spr_discipline.SelectedItem
+	StartActivity(partij_chart)
 End Sub
