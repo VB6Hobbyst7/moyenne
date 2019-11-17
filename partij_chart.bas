@@ -66,7 +66,7 @@ Sub genChart
 
 	
 	chart.IncludeLegend="BOTTOM"
-	
+	chart.SetBarMeanValueFormat(1, 3, 3, False)
 	chart.DrawChart
 	
 End Sub
@@ -111,7 +111,6 @@ Sub processData
 			cursCurrYear.Position = i
 			gem = cursCurrYear.GetDouble("avg_gem")
 			gemYear = gemYear + gem
-			Log(gemYear)
 			month = cursCurrYear.GetInt("month")-1
 			dataChart.yearCurr(month) = cursCurrYear.GetString("year")
 			dataChart.gemCurr(month) = gem

@@ -86,7 +86,9 @@ End Sub
 
 
 Sub lbl_discipline_header_Click
-	clsFunc.colorHeader(clv_discipline, Sender)
+	Dim index As Int = clv_discipline.GetItemFromView(Sender)
+	clsFunc.colorHeaderNew(clv_discipline, index, Starter.disciplineIndex)
+	Starter.disciplineIndex = index
 	
 End Sub
 
@@ -110,12 +112,35 @@ End Sub
 
 
 Sub pnl_discipline_Click
-	clsFunc.colorHeader(clv_discipline, Sender)
+	Dim index As Int = clv_discipline.GetItemFromView(Sender)
+	clsFunc.colorHeaderNew(clv_discipline, index, Starter.disciplineIndex)
+	Starter.disciplineIndex = index
 End Sub
 
 
 Sub lbl_delete_Click
-	Dim index As Int = clsFunc.colorHeader(clv_discipline, Sender)
+	Dim index As String = clsFunc.colorHeader(clv_discipline, Sender)
+	Dim pnl As Panel = clv_discipline.GetPanel(index)
+	Dim partijCount As Int
+	Dim zijnIs As String
+	
+	clsdbe.RetrieveDisciplinePartijen(pnl.Tag)
+	clsdbe.curs.Position = 0
+	partijCount = clsdbe.curs.GetInt("count")
+	
+	If partijCount > 1 Then
+		zijnIs = $"zijn ${partijCount} partijen"$
+	Else
+		zijnIs = $"is ${partijCount} partij"$
+	End If
+	
+	If partijCount > 0 Then
+		Msgbox2Async($"Kan discipline niet verwijderen er ${zijnIs} aangemaakt onder deze discipline"$, Application.LabelName, "Oke", "", "", Null, False)
+		clsdbe.closeConnection
+		Return
+	Else
+		clsdbe.closeConnection
+	End If
 	
 	Msgbox2Async($"Geselecteerde discipline verwijderen?"$, Application.LabelName, "Ja", "", "Nee", Null, False)
 	
@@ -128,7 +153,7 @@ Sub lbl_delete_Click
 End Sub
 
 
-Sub removeItem(index As Int)
+Sub removeItem(index As String)
 	Dim pnl As Panel = clv_discipline.GetPanel(index)
 	Dim id As String = pnl.Tag
 	
@@ -174,4 +199,9 @@ Sub lbl_add_Click
 	Dim label As Label
 	label.Initialize("")
 	addEdit(False, label, "")
+End Sub
+
+Sub setHeaderColor
+	Dim index As Int = clv_discipline.GetItemFromView(Sender)
+	clsFunc.colorHeaderNew(clv_discipline, index, Starter.disciplineIndex)
 End Sub

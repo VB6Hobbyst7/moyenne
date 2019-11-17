@@ -32,17 +32,18 @@ Library6=xcustomlistview
 Library7=xui views
 Library8=dialogs
 Library9=xchart
-ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~SetActivityAttribute(nieuwe_partij, android:windowSoftInputMode, adjustResize|stateHidden)~\n~'End of default text.~\n~
 Module1=discipline
 Module2=nieuwe_partij
-Module3=clsDb
-Module4=partijen
-Module5=Starter
-Module6=partij_chart
+Module3=partijen
+Module4=partij_chart
+Module5=AnotherDatePicker
+Module6=clsDb
 Module7=clsFunctions
+Module8=Starter
 NumberOfFiles=11
 NumberOfLibraries=9
-NumberOfModules=7
+NumberOfModules=8
 Version=9.5
 @EndOfDesignText@
 #Region  Project Attributes 

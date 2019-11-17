@@ -13,6 +13,7 @@ Version=9.5
 Sub Process_Globals
 	Private curs As Cursor
 	Private clsDbe As clsDb
+	Private clsFunc As clsFunctions
 	Private spr_list As List
 	Private totMoyenne As Float
 	Private totaal As Int
@@ -39,11 +40,14 @@ Sub Globals
 	Private lbl_delete As Label
 	Private spr_year As Spinner
 	Private lbl_chart As Label
+	Private lbl_edit As Label
+	Private lbl_disci As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("partij_lijst")
 	clsDbe.Initialize
+	clsFunc.Initialize
 	getDisciplines
 	getYears
 	createPartijList
@@ -51,11 +55,91 @@ Sub Activity_Create(FirstTime As Boolean)
 End Sub
 
 Sub Activity_Resume
-
+	Dim lastIndex As Int = Starter.partijenIndex
+	
+	If lastIndex > -1 Then
+		updatePartij
+		clsFunc.colorHeaderNew(clv_partijen, lastIndex, -1)
+		clv_partijen.AsView.ScrollViewOffsetX = Starter.partijenOffset
+	End If
 End Sub
 
 Sub Activity_Pause (UserClosed As Boolean)
 
+End Sub
+
+Sub updatePartij
+	Dim pnl As Panel = clv_partijen.GetPanel(Starter.partijenIndex)
+	Dim lbl As Label
+	Dim year, disciplineId, avg As String
+	
+	lbl.Initialize("")
+	clsDbe.retrieveGameData(pnl.Tag)
+	clsDbe.curs.Position = 0
+	year = clsDbe.curs.GetString("year")
+	disciplineId = clsDbe.curs.GetString("discipline_id")
+	
+	For Each v As View In pnl.GetAllViewsRecursive
+		If v.Tag = "lbl_locatie" Then
+			lbl = v
+			lbl.Text = clsDbe.curs.GetString("location")
+		End If
+		
+		If v.Tag = "lbl_datum" Then
+			lbl = v
+			lbl.Text = DateTime.Date(clsDbe.curs.GetLong("date_time"))
+		End If
+		
+		If v.Tag = "lbl_beurten" Then
+			lbl = v
+			lbl.Text = clsDbe.curs.GetString("beurten")
+		End If
+		
+		If v.Tag = "lbl_carom" Then
+			lbl = v
+			lbl.Text = clsDbe.curs.GetString("caroms")
+		End If
+		
+		If v.Tag = "lbl_moyenne" Then
+			lbl = v
+			lbl.Text = clsDbe.curs.GetString("moyenne")
+		End If
+		
+		If v.Tag = "lbl_tegen" Then
+			lbl = v
+			lbl.Text = clsDbe.curs.GetString("opponent")
+		End If
+		
+		If v.Tag = "lbl_carom_opponent" Then
+			lbl = v
+			lbl.Text = clsDbe.curs.GetString("caroms_opponent")
+		End If
+		
+		If v.Tag = "lbl_moyenne_opponent" Then
+			lbl = v
+			lbl.Text = clsDbe.curs.GetString("moyenne_opponent")
+		End If
+		
+		
+'		If v.Tag = "lbl_tafel_groot" Then
+'			lbl = v
+'			If clsDbe.curs.GetInt("tafel_groot") = 1 Then
+'				lbl.Text = "Grote tafel"
+'			Else
+'				lbl.Text = ""
+'			End If	
+'		End If
+	Next
+	clsDbe.closeConnection
+	
+	
+	clsDbe.genDisciplineAvg(disciplineId, year)
+	clsDbe.curs.Position = 0
+	
+	avg = NumberFormat2(clsDbe.curs.GetDouble("avg_gem"),1, 3, 3, False)
+	Log("GEM " & avg)
+	lbl_discipline_moyenne.Text = $"Discipline gemiddelde : ${avg}"$
+	clsDbe.closeConnection
 End Sub
 
 
@@ -75,7 +159,7 @@ Sub createPartijList
 	clv_partijen.Clear
 	For i = 0 To curs.RowCount -1
 		curs.Position = i
-		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), curs.GetString("moyenne_opponent"), curs.GetLong("date_time"), curs.GetLong("id"), clv_partijen.AsView.Width), "")
+		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), curs.GetString("moyenne_opponent"), curs.GetLong("date_time"), curs.GetString("id"), clv_partijen.AsView.Width), "")
 	Next
 	
 	If totMoyenne > 0 And totaal > 0 Then
@@ -90,7 +174,7 @@ End Sub
 Sub genPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_opponent As String, moyenne_opponent As String, date As Long, id As String, width As Int) As Panel
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0, width, 245dip)
+	p.SetLayout(0,0, width, 275dip)
 	p.LoadLayout("clv_partijen")
 	p.Tag = id
 	
@@ -149,9 +233,6 @@ Sub clv_partijen_ItemClick (Index As Int, Value As Object)
 	Return
 End Sub
 
-Sub lbl_delete_Click
-	
-End Sub
 
 Sub spr_year_ItemClick (Position As Int, Value As Object)
 	createPartijList
@@ -162,4 +243,51 @@ Sub lbl_chart_Click
 	Starter.disciplineForChart = spr_list.Get(spr_discipline.SelectedIndex)
 	Starter.disciplineName = spr_discipline.SelectedItem
 	StartActivity(partij_chart)
+End Sub
+
+
+Sub lbl_delete_Click
+	Dim index As String =clsFunc.colorHeader(clv_partijen, Sender)
+	Dim pnl As Panel = clv_partijen.GetPanel(index)
+	Dim id As  String = pnl.Tag
+	
+	Msgbox2Async($"Geselecteerde partij verwijderen?"$, Application.LabelName, "Ja", "", "Nee", Null, False)
+	
+	Wait For Msgbox_Result (response As Int)
+	
+	If response = DialogResponse.POSITIVE Then
+		
+	End If
+	
+End Sub
+
+Sub lbl_edit_Click
+	Dim index As String =clsFunc.colorHeader(clv_partijen, Sender)
+	Dim pnl As Panel = clv_partijen.GetPanel(index)
+	Dim id As  String = pnl.Tag
+	Starter.game_id = id
+	Starter.partijenIndex = index
+	Starter.partijSender = Sender
+	StartActivity(nieuwe_partij)
+	
+End Sub
+
+Sub pnl_partij_Click
+	Dim index As Int = clv_partijen.GetItemFromView(Sender)
+	clsFunc.colorHeaderNew(clv_partijen, index, Starter.partijenIndex)
+	
+	
+	Starter.partijenIndex = index
+	Starter.partijSender = Sender
+End Sub
+
+
+
+
+Sub lbl_disci_Click
+	StartActivity(discipline)
+End Sub
+
+Sub clv_partijen_ScrollChanged (Offset As Int)
+	Starter.partijenOffset = Offset
 End Sub

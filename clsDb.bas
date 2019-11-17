@@ -7,7 +7,7 @@ Version=9.5
 Sub Class_Globals
 	Private db As String = $"moyenne.db"$
 	Private sql As SQL
-	Private curs As Cursor
+	Public curs As Cursor
 	Private qry As String
 	Dim clsFunc As clsFunctions
 	
@@ -95,15 +95,25 @@ End Sub
 
 #Region partijen
 
-Sub addPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String)
+Sub addPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String, date As Long)
 	Dim month, year As Int
 	
-	month = DateTime.GetMonth(DateTime.Now)
-	year = DateTime.GetYear(DateTime.Now)
+	month = DateTime.GetMonth(date)
+	year = DateTime.GetYear(date)
 	
 	initDb
 	qry = "insert into partijen (id, location, beurten, caroms, moyenne, opponent, caroms_opponent, moyenne_opponent, date_time, discipline_id, month, year) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, DateTime.Now, CallSub(nieuwe_partij, "retDiscipId"), month, year))
+	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, date, CallSub(nieuwe_partij, "retDiscipId"), month, year))
+End Sub
+
+Sub updatePartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String, date As Long, groot As Int)
+	Dim month, year As Int
+	
+	month = DateTime.GetMonth(date)
+	year = DateTime.GetYear(date)
+	initDb
+	qry = "update partijen set location=?, beurten=?, caroms=?, moyenne=?, opponent=?, caroms_opponent=?, moyenne_opponent=?, date_time=?, discipline_id=?, month=?, year=?, tafel_groot=? where id =?"
+	sql.ExecNonQuery2(qry, Array As String(location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, date, CallSub(nieuwe_partij, "retDiscipId"), month, year, groot, Starter.game_id))
 End Sub
 
 Sub retPartijen(id As String, year As String) As Cursor
@@ -136,6 +146,27 @@ Sub genMoyenneMonthPrevYear(year As Int) As Cursor
 	curs = sql.ExecQuery2(qry, Array As String(Starter.disciplineForChart, year))
 	Return curs
 End Sub
+
+Sub genDisciplineAvg (id As String, year As String) As Cursor
+	initDb
+	qry = "select avg(moyenne) As avg_gem from partijen where discipline_id=? and year=?"
+	curs = sql.ExecQuery2(qry, Array As String(id, year))
+	Return curs
+End Sub
+
+Sub retrieveGameData(id As String)
+	initDb
+	
+	qry = "select * from partijen where id=?"
+	curs = sql.ExecQuery2(qry, Array As String(id))
+End Sub
+
+Sub RetrieveDisciplinePartijen(id As String)
+	initDb
+	qry = "select count(*) as count from partijen where discipline_id = ?"
+	curs = sql.ExecQuery2(qry, Array As String(id))
+End Sub
+
 
 #End Region
 

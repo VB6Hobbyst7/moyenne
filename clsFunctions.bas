@@ -39,10 +39,15 @@ End Sub
 
 'RETURNS INDEX OF SELECTED PANEL
 Sub colorHeader(clv As CustomListView, sndr As Object) As Int
-	
+	Dim index As Int
 	Dim maxIndex As Int = clv.GetSize
-	Dim index As Int = getPanelIndex(clv, sndr)
-	Dim pnl As Panel	
+	
+	If sndr = Null Then
+		index = Starter.partijenIndex
+	Else
+		index = getPanelIndex(clv, sndr)
+	End If
+	Dim pnl As Panel
 	
 	For i = 0 To maxIndex - 1
 		pnl = clv.GetPanel(i)
@@ -57,6 +62,35 @@ Sub colorHeader(clv As CustomListView, sndr As Object) As Int
 				End If
 			End If
 		Next
+	Next
+	
+	Return index
+	
+End Sub
+
+
+
+Sub colorHeaderNew(clv As CustomListView, index As Int, oldIndex As String) As Int
+	Dim pnl As Panel
+	
+	If oldIndex > -1 Then
+		pnl = clv.GetPanel(oldIndex)
+		For Each v As View In pnl.GetAllViewsRecursive
+			If v Is Label Then
+				If v.Tag = "disci" Then
+					v.Color = clvHeaderPrimaryColor
+				End If
+			End If
+		Next
+	End If
+	
+	pnl = clv.GetPanel(index)
+	For Each v As View In pnl.GetAllViewsRecursive
+		If v Is Label Then
+			If v.Tag = "disci" Then
+				v.Color = clvHeaderHighlightColor
+			End If
+		End If
 	Next
 	
 	Return index

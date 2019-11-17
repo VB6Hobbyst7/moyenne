@@ -16,6 +16,12 @@ Sub Process_Globals
 	Public share As String
 	Public yearForChart As String
 	Public disciplineForChart, disciplineName As String
+	Public game_id as String
+	Public partijenIndex As Int = -1
+	Public partijenOffset As Int
+	Public disciplineIndex As Int = -1
+	Public partijSender As Object
+	
 End Sub
 
 Sub Service_Create
@@ -23,6 +29,7 @@ Sub Service_Create
 	clsFunc.Initialize
 	clsDbe.Initialize
 	clsDbe.disciplineExists("")
+	
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)
