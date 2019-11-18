@@ -11,7 +11,6 @@ Version=9.5
 
 Sub Process_Globals
 	Dim xui As XUI
-	Private curs As Cursor
 	Private clsDbe As clsDb
 	Type ChartData (month(12) As String, yearPrev(12) As String, _
 		gemPrev(12) As Double, yearCurr(12) As String, gemCurr(12) As Double, gemCurrYear(12) As Double, gemPrevYear(12) As Double)
@@ -54,7 +53,7 @@ Sub genChart
 	chart.YAxisName = "Moyenne"
 	
 	chart.ClearData
-	chart.AddLine2(yearTo, xui.Color_Blue, 2dip, "RHOMBUS", False, xui.Color_Blue)
+	chart.AddLine2(yearTo, xui.Color_Blue, 2dip, "CIRCLE", False, xui.Color_Blue)
 	chart.AddLine2(yearFrom, xui.Color_Red, 2dip, "CIRCLE", False, xui.Color_Red)
 	chart.AddLine2($"Gem. ${yearTo}"$, xui.Color_Blue, 1dip, "NONE", False, xui.Color_Magenta)
 	chart.AddLine2($"Gem. ${yearFrom}"$, xui.Color_Red, 1dip, "NONE", False, xui.Color_Magenta)

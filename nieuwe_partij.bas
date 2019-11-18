@@ -138,6 +138,12 @@ Sub btn_save_Click
 		clsDbe.addPartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, txt_date.Tag)
 	Else
 		clsDbe.updatePartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, date,groot)
+		'DISCIPLINE CHANGED
+		If spr_discipline.SelectedItem <> Starter.disciplineName Then
+			Starter.partijDisciplineChanged = True
+			Starter.partijNewDiscipline = spr_discipline.SelectedItem
+		End If
+		
 		ToastMessageShow("Partij opgeslagen", False)
 		Activity.Finish
 	End If

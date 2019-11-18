@@ -12,22 +12,27 @@ Version=9.5
 Sub Process_Globals
 	Dim clsFunc As clsFunctions
 	Dim clsDbe As clsDb
+	Public Provider As FileProvider
 	Dim rp As RuntimePermissions
 	Public share As String
 	Public yearForChart As String
 	Public disciplineForChart, disciplineName As String
-	Public game_id as String
+	Public game_id As String
 	Public partijenIndex As Int = -1
 	Public partijenOffset As Int
 	Public disciplineIndex As Int = -1
 	Public partijSender As Object
+	Public partijDisciplineChanged As Boolean = False
+	Public partijNewDiscipline As String
 	
 End Sub
 
 Sub Service_Create
 	share  = rp.GetSafeDirDefaultExternal("irp_files")
+	rp.GetSafeDirDefaultExternal("shared")
 	clsFunc.Initialize
 	clsDbe.Initialize
+	Provider.Initialize
 	clsDbe.disciplineExists("")
 	
 End Sub

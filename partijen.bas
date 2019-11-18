@@ -10,6 +10,8 @@ Version=9.5
 	
 #End Region
 
+#Extends: android.support.v7.app.AppCompatActivity
+
 Sub Process_Globals
 	Private curs As Cursor
 	Private clsDbe As clsDb
@@ -42,20 +44,58 @@ Sub Globals
 	Private lbl_chart As Label
 	Private lbl_edit As Label
 	Private lbl_disci As Label
+	Private toolbar As ACToolBarDark
+	Private ToolbarHelper As ACActionBar
+	Private NavDrawer As DSNavigationDrawer
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("partij_lijst")
+	
 	clsDbe.Initialize
 	clsFunc.Initialize
+	
+	setupNavigation
 	getDisciplines
 	getYears
 	createPartijList
 	countPartijen
 End Sub
 
+Sub setupNavigation
+	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
+	NavDrawer.InitDrawerToggle
+	NavDrawer.NavigationView.LoadLayout("slidingMenu", NavDrawer.DefaultHeaderHeight)
+	NavDrawer.NavigationView.Menu.Add(1, 1000, "Disciplines bewerken", FontBit(Chr(0xE3C9), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(2, 1001, "Nieuwe partij", FontBit(Chr(0xE148), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(3, 1002, "Moyenne grafiek", FontBit(Chr(0xE922), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(4, 1005, "Backup data", FontBit(Chr(0xE2C2), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(5, 1006, "Data terug zetten", FontBit(Chr(0xE8B3), 28, Colors.Black, False))
+
+	NavDrawer.NavigationView.SetItemTextColors(Colors.Gray, Colors.Black, Colors.Red, Colors.LightGray)
+	
+	
+End Sub
+
+Sub toolbar_NavigationItemClick
+	If NavDrawer.IsDrawerOpen Then
+		NavDrawer.CloseDrawer
+	Else
+		NavDrawer.OpenDrawer
+	
+	End If
+End Sub
+
 Sub Activity_Resume
 	Dim lastIndex As Int = Starter.partijenIndex
+	
+	If Starter.partijDisciplineChanged = True Then
+		clv_partijen.RemoveAt(lastIndex)
+		MsgboxAsync($"Partij is terug te vinden onder ${Starter.partijNewDiscipline}"$, "Mijn moyenne")
+		Starter.partijDisciplineChanged = False
+		Starter.partijNewDiscipline = ""
+		Return
+	End If
 	
 	If lastIndex > -1 Then
 		updatePartij
@@ -119,47 +159,39 @@ Sub updatePartij
 			lbl = v
 			lbl.Text = clsDbe.curs.GetString("moyenne_opponent")
 		End If
-		
-		
-'		If v.Tag = "lbl_tafel_groot" Then
-'			lbl = v
-'			If clsDbe.curs.GetInt("tafel_groot") = 1 Then
-'				lbl.Text = "Grote tafel"
-'			Else
-'				lbl.Text = ""
-'			End If	
-'		End If
 	Next
 	clsDbe.closeConnection
-	
 	
 	clsDbe.genDisciplineAvg(disciplineId, year)
 	clsDbe.curs.Position = 0
 	
 	avg = NumberFormat2(clsDbe.curs.GetDouble("avg_gem"),1, 3, 3, False)
-	Log("GEM " & avg)
+	
 	lbl_discipline_moyenne.Text = $"Discipline gemiddelde : ${avg}"$
 	clsDbe.closeConnection
 End Sub
-
 
 Sub lbl_add_Click
 	StartActivity(nieuwe_partij)
 End Sub
 
 Sub countPartijen
-	lbl_partijen_found.Text = $"Gespeelde partijen"$
+'	lbl_partijen_found.Text = $"Gespeelde partijen"$
 End Sub
 
 Sub createPartijList
+	Dim viewWidth As Int = clv_partijen.AsView.Width
+	DateTime.DateFormat ="dd-MMMM-yyyy"
+	
 	totMoyenne = 0
 	totaal = 0
-	DateTime.DateFormat ="dd-MMMM-yyyy"
+	
 	curs = clsDbe.retPartijen(discip, spr_year.SelectedItem)
 	clv_partijen.Clear
+	
 	For i = 0 To curs.RowCount -1
 		curs.Position = i
-		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), curs.GetString("moyenne_opponent"), curs.GetLong("date_time"), curs.GetString("id"), clv_partijen.AsView.Width), "")
+		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), curs.GetString("moyenne_opponent"), curs.GetLong("date_time"), curs.GetString("id"), viewWidth), "")
 	Next
 	
 	If totMoyenne > 0 And totaal > 0 Then
@@ -191,7 +223,6 @@ Sub genPartij(location As String, beurten As String, caroms As String, moyenne A
 	Return p
 End Sub
 
-
 Sub getDisciplines
 	curs = clsDbe.retDisciplines
 	spr_list.Initialize
@@ -206,7 +237,6 @@ Sub getDisciplines
 	clsDbe.closeConnection
 	curs.Close
 End Sub
-
 
 Sub getYears
 	curs = clsDbe.UniqueYears
@@ -233,7 +263,6 @@ Sub clv_partijen_ItemClick (Index As Int, Value As Object)
 	Return
 End Sub
 
-
 Sub spr_year_ItemClick (Position As Int, Value As Object)
 	createPartijList
 End Sub
@@ -245,7 +274,6 @@ Sub lbl_chart_Click
 	StartActivity(partij_chart)
 End Sub
 
-
 Sub lbl_delete_Click
 	Dim index As String =clsFunc.colorHeader(clv_partijen, Sender)
 	Dim pnl As Panel = clv_partijen.GetPanel(index)
@@ -256,7 +284,9 @@ Sub lbl_delete_Click
 	Wait For Msgbox_Result (response As Int)
 	
 	If response = DialogResponse.POSITIVE Then
-		
+		clsDbe.deletePartij(id)
+		clv_partijen.RemoveAt(index)
+		clsDbe.closeConnection
 	End If
 	
 End Sub
@@ -281,9 +311,6 @@ Sub pnl_partij_Click
 	Starter.partijSender = Sender
 End Sub
 
-
-
-
 Sub lbl_disci_Click
 	StartActivity(discipline)
 End Sub
@@ -291,3 +318,78 @@ End Sub
 Sub clv_partijen_ScrollChanged (Offset As Int)
 	Starter.partijenOffset = Offset
 End Sub
+
+Sub lbl_partijen_found_Click
+	clsFunc.restoreData
+End Sub
+
+Sub FontBit (icon As String, font_size As Float, color As Int, awesome As Boolean) As Bitmap
+	If color = 0 Then color = Colors.White
+	Dim typ As Typeface = Typeface.MATERIALICONS
+	If awesome Then typ = Typeface.FONTAWESOME
+	Dim bmp As Bitmap
+	bmp.InitializeMutable(32dip, 32dip)
+	Dim cvs As Canvas
+	cvs.Initialize2(bmp)
+	Dim h As Double
+	If Not(awesome) Then
+		h = cvs.MeasureStringHeight(icon, typ, font_size) + 10dip
+	Else
+		h = cvs.MeasureStringHeight(icon, typ, font_size)
+	End If
+	cvs.DrawText(icon, bmp.Width / 2, bmp.Height / 2 + h / 2, typ, font_size, color, "CENTER")
+	Return bmp
+End Sub
+
+Sub NavDrawer_NavigationItemSelected (MenuItem As ACMenuItem, DrawerGravity As Int)
+	
+	Select MenuItem.Id
+		Case 1
+			StartActivity(discipline)
+		Case 2
+			StartActivity(nieuwe_partij)
+		Case 3
+			Starter.yearForChart = spr_year.SelectedItem
+			Starter.disciplineForChart = spr_list.Get(spr_discipline.SelectedIndex)
+			Starter.disciplineName = spr_discipline.SelectedItem
+			StartActivity(partij_chart)
+		Case 4
+			clsFunc.backupData
+		Case 5
+			clsFunc.restoreData	
+	End Select
+	NavDrawer.CloseDrawer
+End Sub
+
+
+Sub addPartijLabel_Click
+	
+End Sub
+
+
+Sub Activity_CreateMenu(Menu As ACMenu)
+	Dim item As ACMenuItem = toolbar.Menu.Add2(1, 0, "addPartij",  Null)
+	item.Icon = clsFunc.BitmapToBitmapDrawable( clsFunc.FontAwesomeToBitmap(Chr(0xF196), 28))
+	item.ShowAsAction = item.SHOW_AS_ACTION_ALWAYS
+	toolbar.InitMenuListener
+End Sub
+
+Sub toolbar_MenuItemClick (Item As ACMenuItem)
+	Select Item.Id
+		Case 1
+			StartActivity(nieuwe_partij)
+	End Select
+End Sub
+
+
+#If Java
+
+public boolean _onCreateOptionsMenu(android.view.Menu menu) {
+    if (processBA.subExists("activity_createmenu")) {
+        processBA.raiseEvent2(null, true, "activity_createmenu", false, new de.amberhome.objects.appcompat.ACMenuWrapper(menu));
+        return true;
+    }
+    else
+        return false;
+}
+#End If

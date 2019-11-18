@@ -116,6 +116,14 @@ Sub updatePartij(location As String, beurten As String, caroms As String, moyenn
 	sql.ExecNonQuery2(qry, Array As String(location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, date, CallSub(nieuwe_partij, "retDiscipId"), month, year, groot, Starter.game_id))
 End Sub
 
+
+Sub deletePartij(id As String)
+	initDb
+	qry = "delete from partijen where id=?"
+	sql.ExecNonQuery2(qry, Array As String(id))
+	
+End Sub
+
 Sub retPartijen(id As String, year As String) As Cursor
 	initDb
 	
