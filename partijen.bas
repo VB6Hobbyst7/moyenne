@@ -25,8 +25,8 @@ End Sub
 Sub Globals
 	Private discip As String
 
-	Private lbl_add As Label
-	Private lbl_partijen_found As Label
+'	Private lbl_add As Label
+'	Private lbl_partijen_found As Label
 	Private clv_partijen As CustomListView
 	Private lbl_beurten As Label
 	Private lbl_carom As Label
@@ -42,11 +42,11 @@ Sub Globals
 	Private lbl_discipline_moyenne As Label
 	Private lbl_delete As Label
 	Private spr_year As Spinner
-	Private lbl_chart As Label
+'	Private lbl_chart As Label
 	Private lbl_edit As Label
-	Private lbl_disci As Label
+'	Private lbl_disci As Label
 	Private toolbar As ACToolBarDark
-	Private ToolbarHelper As ACActionBar
+'	Private ToolbarHelper As ACActionBar
 	Private NavDrawer As DSNavigationDrawer
 	Private lbl_tot_partijen As Label
 	Private lbl_tot_hoogste_serie As Label
@@ -443,11 +443,6 @@ Sub toolbar_MenuItemClick (Item As ACMenuItem)
 			StartActivity(nieuwe_partij)
 	End Select
 End Sub
-
-Sub getGameId As String
-	Return discipline_id
-End Sub
-
 
 #If Java
 
