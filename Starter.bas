@@ -14,7 +14,7 @@ Sub Process_Globals
 	Dim clsDbe As clsDb
 	Public Provider As FileProvider
 	Dim rp As RuntimePermissions
-	Public share As String
+	Public share, partijLastId As String = ""
 	Public yearForChart As String
 	Public disciplineForChart, disciplineName As String
 	Public game_id As String
@@ -24,6 +24,7 @@ Sub Process_Globals
 	Public partijSender As Object
 	Public partijDisciplineChanged As Boolean = False
 	Public partijNewDiscipline As String
+	Public disciplineId as String
 	
 End Sub
 
@@ -34,7 +35,8 @@ Sub Service_Create
 	clsDbe.Initialize
 	Provider.Initialize
 	clsDbe.disciplineExists("")
-	
+	clsDbe.closeConnection
+	createSeachLists
 End Sub
 
 Sub Service_Start (StartingIntent As Intent)
@@ -55,3 +57,14 @@ Sub Service_Destroy
 End Sub
 
 
+Sub createSeachLists
+	If File.Exists(share, "location.txt") = False Then
+		File.WriteString(share, "location.txt", "")
+	End If
+	If File.Exists(share, "opponent.txt") = False Then
+		File.WriteString(share, "opponent.txt", "")
+	End If
+	
+	
+	
+End Sub

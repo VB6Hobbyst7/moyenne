@@ -21,12 +21,14 @@ Sub Globals
 	Private chart As xChart
 	Private gem As Double
 	Private lbl_discipline As Label
+	Private gameId As String
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("partij_chart")
 	lbl_discipline.Text = Starter.disciplineName
 	clsDbe.Initialize
+	gameId = Starter.disciplineId
 	genChart
 End Sub
 
@@ -95,14 +97,18 @@ Sub processData
 			dataChart.gemPrev(month) = gem
 		Next
 	End If
-	
-	'SET MOYENNE YEAR
-	For i = 0 To 11
-		dataChart.gemPrevYear(i) = gemYear/12
-	Next
-	
 	cursPrevYear.Close
 	clsDbe.closeConnection
+	'SET MOYENNE YEAR
+	clsDbe.genDisciplineAvg(gameId, Starter.yearForChart-1)
+	clsDbe.curs.Position = 0
+	gemYear = clsDbe.curs.GetDouble("avg_gem")
+	clsDbe.closeConnection
+	For i = 0 To 11
+		dataChart.gemPrevYear(i) = gemYear'/12
+	Next
+	
+	
 	gemYear = 0.00
 	Dim cursCurrYear As Cursor = clsDbe.genMoyenneMonthCurrYear(Starter.yearForChart)
 	If cursCurrYear.RowCount > 0 Then
@@ -115,12 +121,18 @@ Sub processData
 			dataChart.gemCurr(month) = gem
 		Next
 	End If
-	'SET MOYENNE YEAR
-	For i = 0 To 11
-		dataChart.gemCurrYear(i) = gemYear/12
-	Next
-
 	clsDbe.closeConnection
 	cursCurrYear.Close
+	
+	clsDbe.genDisciplineAvg(gameId, Starter.yearForChart)
+	clsDbe.curs.Position = 0
+	gemYear = clsDbe.curs.GetDouble("avg_gem")
+	clsDbe.closeConnection
+	'SET MOYENNE YEAR
+	For i = 0 To 11
+		dataChart.gemCurrYear(i) = gemYear'/12
+	Next
+
+	
 	
 End Sub

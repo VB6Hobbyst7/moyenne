@@ -38,6 +38,14 @@ Sub closeConnection
 	End If
 End Sub
 
+Sub lastInsertedId(tabel As String) As String
+	initDb
+	qry = $"SELECT id FROM ${tabel} ORDER BY date_time DESC LIMIT 1;"$
+	curs = sql.ExecQuery(qry)
+	
+	curs.Position = 0
+	Return curs.GetString("id")
+End Sub
 
 #Region discipline
 Sub addDiscipline(disc As String, disciId As String)
@@ -183,6 +191,20 @@ Sub RetrieveDisciplinePartijen(id As String)
 	curs = sql.ExecQuery2(qry, Array As String(id))
 End Sub
 
+Sub partijSummary(disciplineId As String)
+	initDb
+	qry = $"SELECT
+	sum(caroms) tot_car, AVG(caroms) avg_car, AVG(moyenne) moy, count(*) tot_games,max(date_time) date_time,
+	(
+		SELECT max(caroms) partijen
+	) as hoogste_serie , sum(tafel_groot) as winst, (count(*)-sum(tafel_groot)) as verlies
+	FROM partijen
+	WHERE discipline_id = ?
+	GROUP by discipline_id"$
+	
+	curs = sql.ExecQuery2(qry, Array As String(disciplineId))
+	
+End Sub
 
 #End Region
 

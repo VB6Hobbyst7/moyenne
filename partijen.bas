@@ -19,6 +19,7 @@ Sub Process_Globals
 	Private spr_list As List
 	Private totMoyenne As Float
 	Private totaal As Int
+	Private discipline_id As String
 End Sub
 
 Sub Globals
@@ -47,6 +48,15 @@ Sub Globals
 	Private toolbar As ACToolBarDark
 	Private ToolbarHelper As ACActionBar
 	Private NavDrawer As DSNavigationDrawer
+	Private lbl_tot_partijen As Label
+	Private lbl_tot_hoogste_serie As Label
+	Private lbl_tot_caromboles As Label
+	Private lbl_tot_gem_caromboles As Label
+	Private lbl_tot_moyenne As Label
+	Private lbl_tot_laatste_partij As Label
+	Private lbl_win As Label
+	Private lbl_tot_gewonnen As Label
+	Private lbl_tot_verloren As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -89,12 +99,21 @@ End Sub
 Sub Activity_Resume
 	Dim lastIndex As Int = Starter.partijenIndex
 	
+	countPartijen
 	If Starter.partijDisciplineChanged = True Then
 		clv_partijen.RemoveAt(lastIndex)
 		MsgboxAsync($"Partij is terug te vinden onder ${Starter.partijNewDiscipline}"$, "Mijn moyenne")
 		Starter.partijDisciplineChanged = False
 		Starter.partijNewDiscipline = ""
 		Return
+	End If
+	
+	If Starter.partijLastId <> "" Then
+		clsDbe.retrieveGameData(Starter.partijLastId)
+		clsDbe.curs.Position = 0
+		clv_partijen.Add(genPartij(clsDbe.curs.GetString("location"), clsDbe.curs.GetString("beurten"), clsDbe.curs.GetString("caroms"), clsDbe.curs.GetString("moyenne"), clsDbe.curs.GetString("opponent"), clsDbe.curs.GetString("caroms_opponent"), clsDbe.curs.GetString("moyenne_opponent"), clsDbe.curs.GetLong("date_time"), clsDbe.curs.GetString("id"), clv_partijen.AsView.Width), "")
+		clsDbe.closeConnection
+		Starter.partijLastId = ""
 	End If
 	
 	If lastIndex > -1 Then
@@ -159,6 +178,15 @@ Sub updatePartij
 			lbl = v
 			lbl.Text = clsDbe.curs.GetString("moyenne_opponent")
 		End If
+		
+		If v.Tag = "lbl_win" Then
+			lbl = v
+			If clsDbe.curs.GetInt("tafel_groot") > 0 Then
+				lbl.Visible = True
+			Else 	
+				lbl.Visible = False
+			End If
+		End If
 	Next
 	clsDbe.closeConnection
 	
@@ -176,7 +204,29 @@ Sub lbl_add_Click
 End Sub
 
 Sub countPartijen
-'	lbl_partijen_found.Text = $"Gespeelde partijen"$
+	DateTime.DateFormat = "dd-MM-yyyy"
+	clsDbe.partijSummary(discip)
+	If clsDbe.curs.RowCount > 0 Then
+		clsDbe.curs.Position = 0
+		lbl_tot_partijen.Text = "Partijen : " & clsDbe.curs.GetString("tot_games")
+		lbl_tot_hoogste_serie.Text = "Hoogste serie : " &clsDbe.curs.GetString("hoogste_serie")
+		lbl_tot_caromboles.Text = "Caromboles : "&clsDbe.curs.GetString("tot_car")
+		lbl_tot_gem_caromboles.Text = "Gemiddeld : "&NumberFormat2(clsDbe.curs.GetDouble("avg_car"), 1,3,3,False)
+		lbl_tot_moyenne.Text = "Moyenne : "&NumberFormat2(clsDbe.curs.GetDouble("moy"), 1,3,3,False)
+		lbl_tot_laatste_partij.Text = "Laatste Partij : "&DateTime.Date(clsDbe.curs.GetLong("date_time"))
+		lbl_tot_gewonnen.Text = "Gewonnen : " & clsDbe.curs.GetString("winst")
+		lbl_tot_verloren.Text = "Verloren : " & clsDbe.curs.GetString("verlies")
+	Else
+		lbl_tot_partijen.Text = "Partijen : 0"
+		lbl_tot_hoogste_serie.Text = "Hoogste serie : 0"
+		lbl_tot_caromboles.Text = "Caromboles : 0"
+		lbl_tot_gem_caromboles.Text = "Gemiddeld : 0.00"
+		lbl_tot_moyenne.Text = "Moyenne : 0.00"
+		lbl_tot_laatste_partij.Text = "Laatste Partij : "
+		lbl_tot_gewonnen.Text = "Gewonnen : 0"
+		lbl_tot_verloren.Text = "Verloren : 0"
+	End If
+	clsDbe.closeConnection
 End Sub
 
 Sub createPartijList
@@ -206,7 +256,7 @@ End Sub
 Sub genPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_opponent As String, moyenne_opponent As String, date As Long, id As String, width As Int) As Panel
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0, width, 275dip)
+	p.SetLayout(0,0, width, 220dip)
 	p.LoadLayout("clv_partijen")
 	p.Tag = id
 	
@@ -218,6 +268,9 @@ Sub genPartij(location As String, beurten As String, caroms As String, moyenne A
 	lbl_carom_opponent.Text = caroms_opponent
 	lbl_moyenne_opponent.Text = NumberFormat2(moyenne_opponent,1,3,3,False)
 	lbl_datum.Text = DateTime.Date(date)
+	If clsDbe.curs.GetLong("tafel_groot") <> 1 Then
+		lbl_win.Visible = False
+	End If
 	totMoyenne = totMoyenne+moyenne
 	totaal = totaal + 1
 	Return p
@@ -234,6 +287,7 @@ Sub getDisciplines
 	Next
 		
 	discip = spr_list.Get(0)
+	Starter.disciplineId = discip
 	clsDbe.closeConnection
 	curs.Close
 End Sub
@@ -256,7 +310,10 @@ End Sub
 
 Sub spr_discipline_ItemClick (Position As Int, Value As Object)
 	discip = spr_list.Get(Position)
+	discipline_id = spr_list.Get(Position)
+	Starter.disciplineId = spr_list.Get(Position)
 	createPartijList
+	countPartijen
 End Sub
 
 Sub clv_partijen_ItemClick (Index As Int, Value As Object)
@@ -287,6 +344,7 @@ Sub lbl_delete_Click
 		clsDbe.deletePartij(id)
 		clv_partijen.RemoveAt(index)
 		clsDbe.closeConnection
+		countPartijen
 	End If
 	
 End Sub
@@ -298,6 +356,8 @@ Sub lbl_edit_Click
 	Starter.game_id = id
 	Starter.partijenIndex = index
 	Starter.partijSender = Sender
+	Starter.partijDisciplineChanged = False
+	Starter.disciplineName = spr_discipline.SelectedItem
 	StartActivity(nieuwe_partij)
 	
 End Sub
@@ -379,6 +439,10 @@ Sub toolbar_MenuItemClick (Item As ACMenuItem)
 		Case 1
 			StartActivity(nieuwe_partij)
 	End Select
+End Sub
+
+Sub getGameId As String
+	Return discipline_id
 End Sub
 
 

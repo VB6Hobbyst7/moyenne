@@ -20,8 +20,8 @@ Sub Process_Globals
 End Sub
 
 Sub Globals
+	Dim ime As IME
 	Private spr_discipline As Spinner
-	
 	Private txt_caroms As EditText
 	Private txt_caroms_tegen As EditText
 	Private txt_beurten As EditText
@@ -33,16 +33,27 @@ Sub Globals
 	Private lbl_date As Label
 	Private txt_date As EditText
 	Private chk_groot As CheckBox
+	
 End Sub
 
 
 Sub Activity_Create(FirstTime As Boolean)
-	Activity.LoadLayout("nieuwe_partij")
+	Dim time As Long = DateTime.Now
 	clsDbe.Initialize
+	
+	Activity.LoadLayout("nieuwe_partij")
+	
+	ime.Initialize("ime")
+	ime.AddHeightChangedEvent
+	
+	
 	getDisciplines
 	If Starter.game_id <> "" Then
 		setGameData
 	End If
+	DateTime.DateFormat = "dd-MM-yyyy"
+	txt_date.Text = $"$Date{time}"$
+	txt_date.Tag = time
 End Sub
 
 Sub Activity_Resume
@@ -131,22 +142,26 @@ Sub btn_save_Click
 	If chk_groot.Checked = True Then
 		groot = 1
 	Else
-		groot = 0	
+		groot = 0
 	End If
 	
 	If Starter.game_id = "" Then
 		clsDbe.addPartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, txt_date.Tag)
+		clsDbe.closeConnection
+		Starter.partijLastId = clsDbe.lastInsertedId("partijen")
+		clsDbe.closeConnection
 	Else
 		clsDbe.updatePartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, date,groot)
+		clsDbe.closeConnection
 		'DISCIPLINE CHANGED
 		If spr_discipline.SelectedItem <> Starter.disciplineName Then
 			Starter.partijDisciplineChanged = True
 			Starter.partijNewDiscipline = spr_discipline.SelectedItem
 		End If
 		
-		ToastMessageShow("Partij opgeslagen", False)
-		Activity.Finish
 	End If
+	ToastMessageShow("Partij opgeslagen", False)
+	Activity.Finish
 End Sub
 
 Sub lbl_date_Click
@@ -177,8 +192,9 @@ Sub setGameData
 	DateTime.DateFormat = "dd-MM-yyyy"
 	clsDbe.retrieveGameData(Starter.game_id)
 	clsDbe.curs.Position = 0
-	
-	
+	If clsDbe.curs.GetLong("tafel_groot") = 1 Then
+		chk_groot.Checked = True
+	End If
 	txt_date.Text =  DateTime.Date(clsDbe.curs.GetLong("date_time"))
 	txt_date.Tag = clsDbe.curs.GetLong("date_time")
 	date = clsDbe.curs.GetLong("date_time")
@@ -195,4 +211,10 @@ Sub setGameData
 	clsDbe.closeConnection
 End Sub
 
+Private Sub IME_HeightChanged (NewHeight As Int, OldHeight As Int)
+'	svLocation.ActivityHeightChanged(NewHeight)
+End Sub
 
+Sub svLocation_ItemClick (Value As String)
+	Msgbox("Chosen value: " & Value, "")
+End Sub
