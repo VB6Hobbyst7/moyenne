@@ -16,8 +16,8 @@ End Sub
 
 
 Public Sub Initialize
-	If File.Exists(Starter.share, db) = False Then
-		File.Copy(File.DirAssets, db, Starter.share, db)
+	If File.Exists(Starter.share, "moyenne.db") = False Then
+		File.Copy(File.DirAssets, "moyenne.db", Starter.share, "moyenne.db")
 	End If
 	clsFunc.Initialize
 End Sub
@@ -51,8 +51,8 @@ Sub addDiscipline(disc As String, disciId As String)
 		sql.ExecNonQuery2(qry, Array As String(disc, disciId))
 	Else
 		disciId = Starter.clsFunc.UUIDv4
-		qry = "insert into disciplines (id, discipline) values (?,?)"
-		sql.ExecNonQuery2(qry, Array As String(disciId, disc))
+		qry = "insert into disciplines (id, discipline) values (?,?,?)"
+		sql.ExecNonQuery2(qry, Array As String(disciId, disc, 0))
 	End If
 	
 	
@@ -78,7 +78,7 @@ End Sub
 
 Sub lstDisciplines As Cursor
 	initDb
-	qry = "select discipline, id from disciplines order by discipline"
+	qry = "select discipline, id, is_default from disciplines order by discipline"
 	curs = sql.ExecQuery(qry)
 	Return curs
 End Sub
@@ -86,10 +86,18 @@ End Sub
 Sub retDisciplines As Cursor
 	initDb
 	
-	qry = "select * from disciplines order by discipline"
+	qry = "select * from disciplines order by is_default DESC"
 	curs = sql.ExecQuery(qry)
 	Return curs
 End Sub
+
+Sub uncheckDiscipline(id As String, check As String)
+	initDb
+	qry = "update disciplines set is_default = ? where id = ?"
+	sql.ExecNonQuery2(qry, Array As String(check, id))
+	
+End Sub
+
 #End Region 
 
 

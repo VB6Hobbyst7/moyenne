@@ -21,7 +21,7 @@ Public Sub Initialize
 		UseFileProvider = False
 		SharedFolder = rp.GetSafeDirDefaultExternal("shared")
 	End If
-	Log($"Using FileProvider? ${UseFileProvider}"$)
+'	Log($"Using FileProvider? ${UseFileProvider}"$)
 End Sub
 
 'Returns the file uri.

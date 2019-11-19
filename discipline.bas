@@ -9,7 +9,7 @@ Version=9.5
 	#IncludeTitle: False
 	#IgnoreWarnings: 12
 #End Region
-
+#Extends: android.support.v7.app.AppCompatActivity
 
 Sub Process_Globals
 	Private curs As Cursor
@@ -27,8 +27,8 @@ Sub Globals
 	Private DetailsDialog As CustomLayoutDialog
 	Private txt_discipline_edit As EditText
 	Private lbl_edit As Label
-	Private lbl_add As Label
-	Private lbl_disciplines_found As Label
+	
+	Private chk_default As CheckBox
 End Sub
 
 
@@ -39,6 +39,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	clsFunc.Initialize
 	ime.Initialize("")
 	createDisciplineList
+	
 End Sub
 
 
@@ -65,21 +66,24 @@ Sub createDisciplineList
 
 	For i = 0 To curs.RowCount - 1
 		curs.Position = i
-		clv_discipline.Add(genDisciplineList(curs.GetString("discipline"), curs.GetString("id"), clv_discipline.AsView.Width), "")
+		clv_discipline.Add(genDisciplineList(curs.GetString("discipline"), curs.GetString("id"), clv_discipline.AsView.Width, curs.GetString("is_default")), "")
 	Next
 	curs.Close
 	countDisciplines
 End Sub
 
 
-Sub genDisciplineList(disci As String, id As String, width As Int) As Panel
+Sub genDisciplineList(disci As String, id As String, width As Int, isDefault As String) As Panel
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0, width, 185dip)
+	p.SetLayout(0,0, width, 225dip)
 	
 	p.LoadLayout("clv_discipline")
 	lbl_discipline_header.Text = disci
 	lbl_discipline_header.Tag = "disci"
+	If isDefault = "1" Then
+		chk_default.Checked = True
+	End If
 	p.Tag = id
 	Return p
 End Sub
@@ -192,7 +196,7 @@ Sub addEdit(edit As Boolean, label As Label, id As String)
 End Sub
 
 Sub countDisciplines
-	lbl_disciplines_found.Text = $"Disciplines (${clv_discipline.Size})"$
+'	lbl_disciplines_found.Text = $"Disciplines (${clv_discipline.Size})"$
 End Sub
 
 Sub lbl_add_Click
@@ -205,3 +209,43 @@ Sub setHeaderColor
 	Dim index As Int = clv_discipline.GetItemFromView(Sender)
 	clsFunc.colorHeaderNew(clv_discipline, index, Starter.disciplineIndex)
 End Sub
+
+'GET/SET DEFAULT DISCIPLINE
+Sub chk_default_Click()'CheckedChange(Checked As Boolean)
+	Dim index As Int = clv_discipline.GetItemFromView(Sender)
+	Dim pnl As Panel
+	'Dim chk As CheckBox
+	
+	pnl = clv_discipline.GetPanel(index)
+	For Each v As View In pnl.GetAllViewsRecursive
+		If v Is CheckBox Then
+			Dim chk As CheckBox
+			chk = v
+			clsdbe.uncheckDiscipline(pnl.Tag, 1)
+			clsdbe.closeConnection
+			
+		End If
+	Next
+	
+	For i = 0 To clv_discipline.Size - 1
+		pnl = clv_discipline.GetPanel(i)
+		For Each v As View In pnl.GetAllViewsRecursive
+			If v Is CheckBox Then
+				Dim chk As CheckBox
+				chk = v
+				If chk.Checked And i <> index Then
+					chk.Checked= False
+					clsdbe.uncheckDiscipline(pnl.Tag, 0)
+					clsdbe.closeConnection
+					Exit
+				End If
+			End If
+		Next
+	Next
+
+
+	
+
+	
+End Sub
+
