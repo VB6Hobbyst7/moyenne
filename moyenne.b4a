@@ -1,30 +1,36 @@
 ﻿Build1=Default,nl.pdeg.moyenne
 File1=4.jpg
-File10=nieuwe_partij.bal
-File11=partij_chart.bal
-File12=partij_lijst.bal
-File13=slidingMenu.bal
-File2=clv_discipline.bal
-File3=clv_partijen.bal
-File4=discipline.bal
-File5=discipline_edit.bal
-File6=Montserrat-Bold.ttf
-File7=Montserrat-Regular.ttf
-File8=Montserrat-SemiBold.ttf
-File9=moyenne.db
+File10=Montserrat-SemiBold.ttf
+File11=moyenne.db
+File12=nieuwe_partij.bal
+File13=partij_chart.bal
+File14=partij_lijst.bal
+File15=searchViewLoc.bal
+File16=slidingMenu.bal
+File2=biljart-keu-queue-4346577_960_720.jpg
+File3=clv_discipline.bal
+File4=clv_partijen.bal
+File5=discipline.bal
+File6=discipline_edit.bal
+File7=main.bal
+File8=Montserrat-Bold.ttf
+File9=Montserrat-Regular.ttf
 FileGroup1=images
-FileGroup10=partijen
-FileGroup11=partijen
+FileGroup10=font
+FileGroup11=Default Group
 FileGroup12=partijen
-FileGroup13=Default Group
-FileGroup2=discipline
-FileGroup3=partijen
-FileGroup4=discipline
+FileGroup13=partijen
+FileGroup14=partijen
+FileGroup15=partijen
+FileGroup16=partijen
+FileGroup2=images
+FileGroup3=discipline
+FileGroup4=partijen
 FileGroup5=discipline
-FileGroup6=font
-FileGroup7=font
+FileGroup6=discipline
+FileGroup7=main
 FileGroup8=font
-FileGroup9=Default Group
+FileGroup9=font
 Group=Default Group
 IconFile=
 Library1=core
@@ -41,22 +47,24 @@ Library8=dialogs
 Library9=xchart
 ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~SetActivityAttribute(nieuwe_partij, android:windowSoftInputMode, adjustResize|stateHidden)~\n~'End of default text.~\n~~\n~SetApplicationAttribute(android:theme, "@style/MyAppTheme")~\n~~\n~SetApplicationAttribute(android:resizeableActivity, "true")~\n~~\n~AddManifestText(<uses-permission~\n~	android:name="android.permission.WRITE_EXTERNAL_STORAGE"~\n~	android:maxSdkVersion="18" />~\n~)~\n~~\n~AddApplicationText(~\n~  <provider~\n~  android:name="android.support.v4.content.FileProvider"~\n~  android:authorities="$PACKAGE$.provider"~\n~  android:exported="false"~\n~  android:grantUriPermissions="true">~\n~  <meta-data~\n~  android:name="android.support.FILE_PROVIDER_PATHS"~\n~  android:resource="@xml/provider_paths"/>~\n~  </provider>~\n~)~\n~CreateResource(xml, provider_paths,~\n~   <files-path name="name" path="shared" />~\n~)~\n~~\n~~\n~CreateResource(values, theme.xml,~\n~<resources>~\n~    <style name="MyAppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">'.light.NoActionBar">~\n~        <item name="colorPrimary">#004ba0</item>~\n~        <item name="colorPrimaryDark">#004ba0</item>~\n~        <item name="colorAccent">#0098FF</item>~\n~        <item name="windowNoTitle">true</item>~\n~        <item name="windowActionBar">true</item>~\n~		<item name="android:windowDrawsSystemBarBackgrounds">true</item>~\n~    	<item name="android:statusBarColor">#004ba0</item>~\n~		<item name="android:navigationBarColor">#004ba0</item>~\n~		<item name="android:colorControlActivated">#1a237e</item>~\n~        <item name="android:colorControlNormal">#007CF5</item>~\n~	</style>~\n~~\n~</resources>)
 Module1=partijen
-Module2=clsFunctions
+Module10=partij_chart
+Module2=nieuwe_partij
 Module3=clsDb
-Module4=discipline
-Module5=nieuwe_partij
-Module6=partij_chart
-Module7=Starter
+Module4=Starter
+Module5=clsSearchTxt
+Module6=SearchView
+Module7=clsFunctions
 Module8=FileProvider
-NumberOfFiles=13
+Module9=discipline
+NumberOfFiles=16
 NumberOfLibraries=12
-NumberOfModules=8
+NumberOfModules=10
 Version=9.5
 @EndOfDesignText@
 #Region  Project Attributes 
 	#ApplicationLabel: Mijn Moyenne
 	#VersionCode: 1
-	#VersionName: 0.10
+	#VersionName: 0.70
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -70,22 +78,31 @@ Version=9.5
 Sub Process_Globals
 	'These global variables will be declared once when the application starts.
 	'These variables can be accessed from all modules.
-
+	Dim tmr As Timer
 End Sub
 
 Sub Globals
 	'These global variables will be redeclared each time the activity is created.
 	'These variables can only be accessed from this module.
+	Private lbl_version As Label
+	Private lbl_header As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	'Do not forget to load the layout file created with the visual designer. For example:
-	'Activity.LoadLayout("Layout1")
-	'StartActivity(discipline)
-	'StartActivity(nieuwe_partij)
+	DateTime.DateFormat = "dd-MM-yyyy"
+	Activity.LoadLayout("main")
+	tmr.Initialize("tmr", 1000)
+	tmr.Enabled = True
+	lbl_version.Text = $"Versie ${Application.VersionName}"$
+	lbl_header.Text = Application.LabelName
+	
+
+End Sub
+
+Sub tmr_Tick
 	StartActivity(partijen)
 	Activity.Finish
-
+	
 End Sub
 
 Sub Activity_Resume
