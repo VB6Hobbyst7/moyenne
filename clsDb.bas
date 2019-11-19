@@ -111,15 +111,16 @@ End Sub
 
 #Region partijen
 
-Sub addPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String, date As Long)
-	Dim month, year As Int
+Sub addPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String, date As Long, groot As Int)
+	Dim month, year, winst As Int
 	
 	month = DateTime.GetMonth(date)
 	year = DateTime.GetYear(date)
+	winst = groot
 	
 	initDb
-	qry = "insert into partijen (id, location, beurten, caroms, moyenne, opponent, caroms_opponent, moyenne_opponent, date_time, discipline_id, month, year) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, date, CallSub(nieuwe_partij, "retDiscipId"), month, year))
+	qry = "insert into partijen (id, location, beurten, caroms, moyenne, opponent, caroms_opponent, moyenne_opponent, date_time, discipline_id, month, year, tafel_groot) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+	sql.ExecNonQuery2(qry, Array As String(clsFunc.UUIDv4, location, beurten, caroms, moyenne, tegen, caroms_tegen, moyenne_tegen, date, CallSub(nieuwe_partij, "retDiscipId"), month, year, winst))
 End Sub
 
 Sub updatePartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_tegen As String, moyenne_tegen As String, date As Long, groot As Int)

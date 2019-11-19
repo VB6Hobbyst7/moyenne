@@ -173,7 +173,7 @@ Sub btn_save_Click
 	End If
 	
 	If Starter.game_id = "" Then
-		clsDbe.addPartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, txt_date.Tag)
+		clsDbe.addPartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, txt_date.Tag, groot)
 		clsDbe.closeConnection
 		Starter.partijLastId = clsDbe.lastInsertedId("partijen")
 		clsDbe.closeConnection
