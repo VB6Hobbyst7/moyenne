@@ -64,7 +64,7 @@ Version=9.5
 #Region  Project Attributes 
 	#ApplicationLabel: Mijn Moyenne
 	#VersionCode: 1
-	#VersionName: 0.65
+	#VersionName: 0.70
 	'SupportedOrientations possible values: unspecified, landscape or portrait.
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
@@ -89,7 +89,7 @@ Sub Globals
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
-	'Do not forget to load the layout file created with the visual designer. For example:
+	DateTime.DateFormat = "dd-MM-yyyy"
 	Activity.LoadLayout("main")
 	tmr.Initialize("tmr", 1000)
 	tmr.Enabled = True

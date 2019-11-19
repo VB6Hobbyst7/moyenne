@@ -8,6 +8,7 @@ Version=9.5
 	#FullScreen: True
 	#IncludeTitle: False
 #End Region
+#Extends: android.support.v7.app.AppCompatActivity
 
 Sub Process_Globals
 	Dim xui As XUI
@@ -22,11 +23,12 @@ Sub Globals
 	Private gem As Double
 	Private lbl_discipline As Label
 	Private gameId As String
+	Private toolbar As ACToolBarDark
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("partij_chart")
-	lbl_discipline.Text = Starter.disciplineName
+	toolbar.SubTitle = Starter.disciplineName
 	clsDbe.Initialize
 	gameId = Starter.disciplineId
 	genChart

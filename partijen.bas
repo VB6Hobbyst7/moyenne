@@ -204,7 +204,7 @@ Sub lbl_add_Click
 End Sub
 
 Sub countPartijen
-	DateTime.DateFormat = "dd-MM-yyyy"
+'	DateTime.DateFormat = "dd-MM-yyyy"
 	clsDbe.partijSummary(discip)
 	If clsDbe.curs.RowCount > 0 Then
 		clsDbe.curs.Position = 0
@@ -231,7 +231,7 @@ End Sub
 
 Sub createPartijList
 	Dim viewWidth As Int = clv_partijen.AsView.Width
-	DateTime.DateFormat ="dd-MMMM-yyyy"
+'	DateTime.DateFormat ="dd-MMMM-yyyy"
 	
 	totMoyenne = 0
 	totaal = 0
@@ -241,6 +241,9 @@ Sub createPartijList
 	
 	For i = 0 To curs.RowCount -1
 		curs.Position = i
+		If curs.GetString("moyenne") = "" Then
+			Continue
+		End If
 		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), curs.GetString("moyenne_opponent"), curs.GetLong("date_time"), curs.GetString("id"), viewWidth), "")
 	Next
 	

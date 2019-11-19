@@ -76,7 +76,7 @@ End Sub
 Sub genDisciplineList(disci As String, id As String, width As Int, isDefault As String) As Panel
 	Dim p As Panel
 	p.Initialize("")
-	p.SetLayout(0,0, width, 225dip)
+	p.SetLayout(0,0, width, 100dip)
 	
 	p.LoadLayout("clv_discipline")
 	lbl_discipline_header.Text = disci

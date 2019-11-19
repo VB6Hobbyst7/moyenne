@@ -8,9 +8,10 @@ Version=9.5
 	#FullScreen: True
 	#IncludeTitle: False
 #End Region
-
+#Extends: android.support.v7.app.AppCompatActivity
 Sub Process_Globals
 	Dim clsDbe As clsDb
+	Dim clsFunc As clsFunctions
 	Dim curs As Cursor
 	Dim spr_list As List
 	Dim discip As String
@@ -34,13 +35,14 @@ Sub Globals
 	Private txt_date As EditText
 	Private chk_groot As CheckBox
 	
+	Private toolbar As ACToolBarDark
 End Sub
 
 
 Sub Activity_Create(FirstTime As Boolean)
 	Dim time As Long = DateTime.Now
 	clsDbe.Initialize
-	
+	clsFunc.Initialize
 	Activity.LoadLayout("nieuwe_partij")
 	
 	ime.Initialize("ime")
@@ -51,7 +53,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	If Starter.game_id <> "" Then
 		setGameData
 	End If
-	DateTime.DateFormat = "dd-MM-yyyy"
+'	DateTime.DateFormat = "dd-MM-yyyy"
 	txt_date.Text = $"$Date{time}"$
 	txt_date.Tag = time
 End Sub
@@ -136,7 +138,32 @@ Sub txt_caroms_tegen_FocusChanged (HasFocus As Boolean)
 	checkBeurten
 End Sub
 
+Sub validateInput As Boolean
+	If txt_date.Text = "" Then
+		txt_date.Hint = "Datum"
+		txt_date.HintColor = Colors.red
+		ime.ShowKeyboard(txt_date)
+		Return False
+	Else If txt_beurten.Text = "" Then
+		txt_beurten.Hint = "Aantal beurten"
+		txt_beurten.HintColor = Colors.Red
+		ime.ShowKeyboard(txt_beurten)
+		Return False
+	Else If txt_caroms.Text = "" Then
+		txt_caroms.Hint = "30"
+		txt_caroms.HintColor = Colors.Red
+		ime.ShowKeyboard(txt_caroms)
+		Return False
+	End If
+	Return True
+	
+End Sub
+
 Sub btn_save_Click
+	If validateInput = False Then
+		Return
+	End If
+	
 	Dim groot As Int
 	
 	If chk_groot.Checked = True Then
@@ -161,13 +188,23 @@ Sub btn_save_Click
 		
 	End If
 	ToastMessageShow("Partij opgeslagen", False)
+	Msgbox2Async($"Nog een partij toevoegen?"$, Application.LabelName, "Ja", "", "Nee", Null, False)
+	
+	Wait For Msgbox_Result (response As Int)
+	
+	If response = DialogResponse.POSITIVE Then
+		resetFields
+		ime.ShowKeyboard(txt_locatie)
+		Return
+	End If
+	
 	Activity.Finish
 End Sub
 
 Sub lbl_date_Click
 	Dim newDate As DateDialog
 	Dim result As Int
-	DateTime.DateFormat = "dd-MM-yyyy"
+'	DateTime.DateFormat = "dd-MM-yyyy"
 	
 	If date > 0 Then
 		newDate.DateTicks = date
@@ -189,7 +226,7 @@ End Sub
 
 
 Sub setGameData
-	DateTime.DateFormat = "dd-MM-yyyy"
+'	DateTime.DateFormat = "dd-MM-yyyy"
 	clsDbe.retrieveGameData(Starter.game_id)
 	clsDbe.curs.Position = 0
 	If clsDbe.curs.GetLong("tafel_groot") = 1 Then
@@ -202,19 +239,54 @@ Sub setGameData
 	txt_locatie.Text = clsDbe.curs.GetString("location")
 	txt_beurten.Text = 	clsDbe.curs.GetString("beurten")
 	txt_caroms.Text = clsDbe.curs.GetString("caroms")
-	txt_moyenne.Text = clsDbe.curs.GetString("moyenne")
+	txt_moyenne.Text = NumberFormat2(clsDbe.curs.GetString("moyenne"), 1,3,3,False)
 	txt_tegen.Text = clsDbe.curs.GetString("opponent")
 	txt_caroms_tegen.Text = clsDbe.curs.GetString("caroms_opponent")
-	txt_moyenne_tegen.Text = clsDbe.curs.GetString("moyenne_opponent")
+	txt_moyenne_tegen.Text = NumberFormat2( clsDbe.curs.GetString("moyenne_opponent"),1,3,3,False)
 	discip = clsDbe.curs.GetString("discipline_id")
 	
 	clsDbe.closeConnection
 End Sub
 
-Private Sub IME_HeightChanged (NewHeight As Int, OldHeight As Int)
-'	svLocation.ActivityHeightChanged(NewHeight)
+Sub Activity_CreateMenu(Menu As ACMenu)
+	Return
+	Dim item As ACMenuItem = toolbar.Menu.Add2(1, 0, "addPartij",  Null)
+	item.Icon = clsFunc.BitmapToBitmapDrawable( clsFunc.FontAwesomeToBitmap(Chr(0xF196), 28))
+	item.ShowAsAction = item.SHOW_AS_ACTION_ALWAYS
+	toolbar.InitMenuListener
 End Sub
 
-Sub svLocation_ItemClick (Value As String)
-	Msgbox("Chosen value: " & Value, "")
+
+Sub toolbar_MenuItemClick (Item As ACMenuItem)
+	Select Item.Id
+		Case 1
+			resetFields
+	End Select
 End Sub
+
+Sub resetFields
+	chk_groot.Checked = False
+'	txt_date.Text =  ""
+'	txt_date.Tag = DateTime.Date(DateTime.Now)
+'	date = DateTime.Date(DateTime.Now)
+	txt_locatie.Text = ""
+	txt_beurten.Text = 	""
+	txt_caroms.Text = ""
+	txt_moyenne.Text = ""
+	txt_tegen.Text = ""
+	txt_caroms_tegen.Text = ""
+	txt_moyenne_tegen.Text = ""
+End Sub
+
+
+#If Java
+
+public boolean _onCreateOptionsMenu(android.view.Menu menu) {
+    if (processBA.subExists("activity_createmenu")) {
+        processBA.raiseEvent2(null, true, "activity_createmenu", false, new de.amberhome.objects.appcompat.ACMenuWrapper(menu));
+        return true;
+    }
+    else
+        return false;
+}
+#End If
