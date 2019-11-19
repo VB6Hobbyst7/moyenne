@@ -29,6 +29,7 @@ Sub Globals
 	Private lbl_edit As Label
 	
 	Private chk_default As CheckBox
+	Private toolbar As ACToolBarDark
 End Sub
 
 
@@ -243,9 +244,33 @@ Sub chk_default_Click()'CheckedChange(Checked As Boolean)
 		Next
 	Next
 
-
-	
-
-	
 End Sub
 
+Sub Activity_CreateMenu(Menu As ACMenu)
+	Dim item As ACMenuItem = toolbar.Menu.Add2(1, 0, "addDiscipline",  Null)
+	item.Icon = clsFunc.BitmapToBitmapDrawable( clsFunc.FontAwesomeToBitmap(Chr(0xF196), 28))
+	item.ShowAsAction = item.SHOW_AS_ACTION_ALWAYS
+	toolbar.InitMenuListener
+End Sub
+
+Sub toolbar_MenuItemClick (Item As ACMenuItem)
+	Select Item.Id
+		Case 1
+			Dim label As Label
+			label.Initialize("")
+			addEdit(False, label, "")
+	End Select
+End Sub
+
+
+#If Java
+
+public boolean _onCreateOptionsMenu(android.view.Menu menu) {
+    if (processBA.subExists("activity_createmenu")) {
+        processBA.raiseEvent2(null, true, "activity_createmenu", false, new de.amberhome.objects.appcompat.ACMenuWrapper(menu));
+        return true;
+    }
+    else
+        return false;
+}
+#End If

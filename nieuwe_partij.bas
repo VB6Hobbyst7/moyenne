@@ -279,14 +279,3 @@ Sub resetFields
 End Sub
 
 
-#If Java
-
-public boolean _onCreateOptionsMenu(android.view.Menu menu) {
-    if (processBA.subExists("activity_createmenu")) {
-        processBA.raiseEvent2(null, true, "activity_createmenu", false, new de.amberhome.objects.appcompat.ACMenuWrapper(menu));
-        return true;
-    }
-    else
-        return false;
-}
-#End If
