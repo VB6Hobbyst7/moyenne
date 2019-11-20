@@ -32,10 +32,10 @@ Sub Globals
 	Private txt_locatie As EditText
 	Private btn_save As Button
 	Private lbl_date As Label
-	Private txt_date As EditText
 	Private chk_groot As CheckBox
 	
 	Private toolbar As ACToolBarDark
+	Private lbl_date_time As Label
 End Sub
 
 
@@ -57,8 +57,8 @@ Sub Activity_Create(FirstTime As Boolean)
 		toolbar.SubTitle = "Nieuwe partij"
 	End If
 	ime.ShowKeyboard(txt_locatie)
-	txt_date.Text = $"$Date{time}"$
-	txt_date.Tag = time
+	lbl_date_time.Text = $"$Date{time}"$
+	lbl_date_time.Tag = time
 End Sub
 
 Sub Activity_Resume
@@ -142,11 +142,7 @@ Sub txt_caroms_tegen_FocusChanged (HasFocus As Boolean)
 End Sub
 
 Sub validateInput As Boolean
-	If txt_date.Text = "" Then
-		txt_date.Hint = "Datum"
-		txt_date.HintColor = Colors.red
-		ime.ShowKeyboard(txt_date)
-		Return False
+	If lbl_date_time.Text = "" Then
 	Else If txt_beurten.Text = "" Then
 		txt_beurten.Hint = "Aantal beurten"
 		txt_beurten.HintColor = Colors.Red
@@ -176,7 +172,7 @@ Sub btn_save_Click
 	End If
 	
 	If Starter.game_id = "" Then
-		clsDbe.addPartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, txt_date.Tag, groot)
+		clsDbe.addPartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, lbl_date_time.Tag, groot)
 		clsDbe.closeConnection
 		Starter.partijLastId = clsDbe.lastInsertedId("partijen")
 		clsDbe.closeConnection
@@ -206,9 +202,14 @@ Sub btn_save_Click
 End Sub
 
 Sub lbl_date_Click
+	showDatePicker
+	
+End Sub
+
+
+Sub showDatePicker
 	Dim newDate As DateDialog
 	Dim result As Int
-'	DateTime.DateFormat = "dd-MM-yyyy"
 	
 	If date > 0 Then
 		newDate.DateTicks = date
@@ -221,23 +222,20 @@ Sub lbl_date_Click
 	
 	
 	If result = DialogResponse.POSITIVE Then
-		txt_date.Text 	= DateTime.Date(newDate.DateTicks)
-		txt_date.Tag	= newDate.DateTicks
+		lbl_date_time.Text 	= DateTime.Date(newDate.DateTicks)
+		lbl_date_time.Tag	= newDate.DateTicks
 		date = newDate.DateTicks
 	End If
-	
 End Sub
 
-
 Sub setGameData
-'	DateTime.DateFormat = "dd-MM-yyyy"
 	clsDbe.retrieveGameData(Starter.game_id)
 	clsDbe.curs.Position = 0
 	If clsDbe.curs.GetLong("tafel_groot") = 1 Then
 		chk_groot.Checked = True
 	End If
-	txt_date.Text =  DateTime.Date(clsDbe.curs.GetLong("date_time"))
-	txt_date.Tag = clsDbe.curs.GetLong("date_time")
+	lbl_date_time.Text =  DateTime.Date(clsDbe.curs.GetLong("date_time"))
+	lbl_date_time.Tag = clsDbe.curs.GetLong("date_time")
 	date = clsDbe.curs.GetLong("date_time")
 	spr_discipline.SelectedIndex =  spr_list.IndexOf(clsDbe.curs.GetString("discipline_id"))
 	txt_locatie.Text = clsDbe.curs.GetString("location")
@@ -254,9 +252,6 @@ End Sub
 
 Sub resetFields
 	chk_groot.Checked = False
-'	txt_date.Text =  ""
-'	txt_date.Tag = DateTime.Date(DateTime.Now)
-'	date = DateTime.Date(DateTime.Now)
 	txt_locatie.Text = ""
 	txt_beurten.Text = 	""
 	txt_caroms.Text = ""
@@ -267,3 +262,7 @@ Sub resetFields
 End Sub
 
 
+
+Sub lbl_date_time_Click
+	showDatePicker
+End Sub

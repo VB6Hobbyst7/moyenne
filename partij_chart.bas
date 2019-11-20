@@ -21,7 +21,7 @@ End Sub
 Sub Globals
 	Private chart As xChart
 	Private gem As Double
-	Private lbl_discipline As Label
+'	Private lbl_discipline As Label
 	Private gameId As String
 	Private toolbar As ACToolBarDark
 End Sub

@@ -19,14 +19,11 @@ Sub Process_Globals
 	Private spr_list As List
 	Private totMoyenne As Float
 	Private totaal As Int
-	Private discipline_id As String
+'	Private discipline_id As String
 End Sub
 
 Sub Globals
 	Private discip As String
-
-'	Private lbl_add As Label
-'	Private lbl_partijen_found As Label
 	Private clv_partijen As CustomListView
 	Private lbl_beurten As Label
 	Private lbl_carom As Label
@@ -38,15 +35,11 @@ Sub Globals
 	Private pnl_partij As Panel
 	Private lbl_datum As Label
 	Private spr_discipline As Spinner
-	
 	Private lbl_discipline_moyenne As Label
 	Private lbl_delete As Label
 	Private spr_year As Spinner
-'	Private lbl_chart As Label
 	Private lbl_edit As Label
-'	Private lbl_disci As Label
 	Private toolbar As ACToolBarDark
-'	Private ToolbarHelper As ACActionBar
 	Private NavDrawer As DSNavigationDrawer
 	Private lbl_tot_partijen As Label
 	Private lbl_tot_hoogste_serie As Label
@@ -204,7 +197,6 @@ Sub lbl_add_Click
 End Sub
 
 Sub countPartijen
-'	DateTime.DateFormat = "dd-MM-yyyy"
 	clsDbe.partijSummary(discip)
 	If clsDbe.curs.RowCount > 0 Then
 		clsDbe.curs.Position = 0
@@ -231,7 +223,6 @@ End Sub
 
 Sub createPartijList
 	Dim viewWidth As Int = clv_partijen.AsView.Width
-'	DateTime.DateFormat ="dd-MMMM-yyyy"
 	
 	totMoyenne = 0
 	totaal = 0
@@ -313,7 +304,7 @@ End Sub
 
 Sub spr_discipline_ItemClick (Position As Int, Value As Object)
 	discip = spr_list.Get(Position)
-	discipline_id = spr_list.Get(Position)
+'	discipline_id = spr_list.Get(Position)
 	Starter.disciplineId = spr_list.Get(Position)
 	createPartijList
 	countPartijen

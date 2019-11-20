@@ -4,6 +4,8 @@ ModulesStructureVersion=1
 Type=Class
 Version=9.5
 @EndOfDesignText@
+#IgnoreWarnings: 12
+
 Sub Class_Globals
 	Dim txtLocations As String = "location.txt"
 	Dim txtOpponent As String = "opponent.txt"
