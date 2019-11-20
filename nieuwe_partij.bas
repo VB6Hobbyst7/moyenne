@@ -52,8 +52,11 @@ Sub Activity_Create(FirstTime As Boolean)
 	getDisciplines
 	If Starter.game_id <> "" Then
 		setGameData
+		toolbar.SubTitle = "Partij bewerken"
+	Else	
+		toolbar.SubTitle = "Nieuwe partij"
 	End If
-'	DateTime.DateFormat = "dd-MM-yyyy"
+	ime.ShowKeyboard(txt_locatie)
 	txt_date.Text = $"$Date{time}"$
 	txt_date.Tag = time
 End Sub
@@ -177,9 +180,21 @@ Sub btn_save_Click
 		clsDbe.closeConnection
 		Starter.partijLastId = clsDbe.lastInsertedId("partijen")
 		clsDbe.closeConnection
+		
+		Msgbox2Async($"Nog een partij toevoegen?"$, Application.LabelName, "Ja", "", "Nee", Null, False)
+	
+		Wait For Msgbox_Result (response As Int)
+	
+		If response = DialogResponse.POSITIVE Then
+			resetFields
+			ime.ShowKeyboard(txt_locatie)
+			Return
+		End If
 	Else
 		clsDbe.updatePartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, date,groot)
 		clsDbe.closeConnection
+		ToastMessageShow("Partij opgeslagen", False)
+		
 		'DISCIPLINE CHANGED
 		If spr_discipline.SelectedItem <> Starter.disciplineName Then
 			Starter.partijDisciplineChanged = True
@@ -187,17 +202,6 @@ Sub btn_save_Click
 		End If
 		
 	End If
-	ToastMessageShow("Partij opgeslagen", False)
-	Msgbox2Async($"Nog een partij toevoegen?"$, Application.LabelName, "Ja", "", "Nee", Null, False)
-	
-	Wait For Msgbox_Result (response As Int)
-	
-	If response = DialogResponse.POSITIVE Then
-		resetFields
-		ime.ShowKeyboard(txt_locatie)
-		Return
-	End If
-	
 	Activity.Finish
 End Sub
 
@@ -246,22 +250,6 @@ Sub setGameData
 	discip = clsDbe.curs.GetString("discipline_id")
 	
 	clsDbe.closeConnection
-End Sub
-
-Sub Activity_CreateMenu(Menu As ACMenu)
-	Return
-	Dim item As ACMenuItem = toolbar.Menu.Add2(1, 0, "addPartij",  Null)
-	item.Icon = clsFunc.BitmapToBitmapDrawable( clsFunc.FontAwesomeToBitmap(Chr(0xF196), 28))
-	item.ShowAsAction = item.SHOW_AS_ACTION_ALWAYS
-	toolbar.InitMenuListener
-End Sub
-
-
-Sub toolbar_MenuItemClick (Item As ACMenuItem)
-	Select Item.Id
-		Case 1
-			resetFields
-	End Select
 End Sub
 
 Sub resetFields

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="nl.pdeg.moyenne"
+	android:versionCode="1"
+	android:versionName="0.70"
+	android:installLocation="internalOnly">
+	
+	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
+	<supports-screens android:largeScreens="true" 
+	    android:normalScreens="true" 
+	    android:smallScreens="true" 
+	    android:anyDensity="true"/>
+	<uses-permission
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+		android:maxSdkVersion="18" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+	<application
+		android:label="Mijn Moyenne"
+		android:theme="@style/MyAppTheme"
+		android:icon="@mipmap/ic_launcher"
+		android:resizeableActivity="true">
+		
+		<provider
+		  android:name="androidx.core.content.FileProvider"
+		  android:authorities="nl.pdeg.moyenne.provider"
+		  android:exported="false"
+		  android:grantUriPermissions="true">
+		  <meta-data
+		  android:name="android.support.FILE_PROVIDER_PATHS"
+		  android:resource="@xml/provider_paths"/>
+		  </provider>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".main"
+			android:label="Mijn Moyenne"
+			android:screenOrientation="portrait">
+			<intent-filter>
+			   <action android:name="android.intent.action.MAIN" />
+			   <category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			
+		</activity>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".partijen"
+			android:label="Mijn Moyenne"
+			android:screenOrientation="portrait">
+		</activity>
+		<activity
+			android:windowSoftInputMode="adjustResize|stateHidden"
+			android:launchMode="singleTop"
+			android:name=".nieuwe_partij"
+			android:label="Mijn Moyenne"
+			android:screenOrientation="portrait">
+		</activity>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".partij_chart"
+			android:label="Mijn Moyenne"
+			android:screenOrientation="portrait">
+		</activity>
+		<service android:name=".starter">
+		</service>
+		<receiver android:name=".starter$starter_BR">
+		</receiver>
+		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".discipline"
+			android:label="Mijn Moyenne"
+			android:screenOrientation="portrait">
+		</activity>
+	</application>
+</manifest>

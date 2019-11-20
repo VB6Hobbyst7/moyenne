@@ -14,7 +14,8 @@ iRP.b4a.meta
 bin/
 gen/
 src/
-Objects/src/
+b4xlibs/
+
 # Gradle files
 .gradle/
 build/
@@ -36,5 +37,5 @@ captures/
 
 Objects/ObfuscatorMap\.txt
 
-Objects/
+
 IRP261220181700.zip
