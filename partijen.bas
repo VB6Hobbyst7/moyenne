@@ -69,11 +69,11 @@ Sub setupNavigation
 	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
 	NavDrawer.InitDrawerToggle
 	NavDrawer.NavigationView.LoadLayout("slidingMenu", NavDrawer.DefaultHeaderHeight)
-	NavDrawer.NavigationView.Menu.Add(1, 1000, "Disciplines bewerken", FontBit(Chr(0xE3C9), 28, Colors.Black, False))
-	NavDrawer.NavigationView.Menu.Add(2, 1001, "Nieuwe partij", FontBit(Chr(0xE148), 28, Colors.Black, False))
-	NavDrawer.NavigationView.Menu.Add(3, 1002, "Moyenne grafiek", FontBit(Chr(0xE922), 28, Colors.Black, False))
-	NavDrawer.NavigationView.Menu.Add(4, 1005, "Backup data", FontBit(Chr(0xE2C2), 28, Colors.Black, False))
-	NavDrawer.NavigationView.Menu.Add(5, 1006, "Data terug zetten", FontBit(Chr(0xE8B3), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(1, 1000, "Disciplines bewerken", genCode.FontBit(Chr(0xE3C9), 28, Colors.Green, False))
+	NavDrawer.NavigationView.Menu.Add(2, 1001, "Nieuwe partij", genCode.FontBit(Chr(0xE148), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(3, 1002, "Moyenne grafiek", genCode.FontBit(Chr(0xE922), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(4, 1005, "Backup data", genCode.FontBit(Chr(0xE2C2), 28, Colors.Black, False))
+	NavDrawer.NavigationView.Menu.Add(5, 1006, "Data terug zetten", genCode.FontBit(Chr(0xE8B3), 28, Colors.Black, False))
 
 	NavDrawer.NavigationView.SetItemTextColors(Colors.Gray, Colors.Black, Colors.Red, Colors.LightGray)
 	
@@ -377,23 +377,6 @@ Sub lbl_partijen_found_Click
 	clsFunc.restoreData
 End Sub
 
-Sub FontBit (icon As String, font_size As Float, color As Int, awesome As Boolean) As Bitmap
-	If color = 0 Then color = Colors.White
-	Dim typ As Typeface = Typeface.MATERIALICONS
-	If awesome Then typ = Typeface.FONTAWESOME
-	Dim bmp As Bitmap
-	bmp.InitializeMutable(32dip, 32dip)
-	Dim cvs As Canvas
-	cvs.Initialize2(bmp)
-	Dim h As Double
-	If Not(awesome) Then
-		h = cvs.MeasureStringHeight(icon, typ, font_size) + 10dip
-	Else
-		h = cvs.MeasureStringHeight(icon, typ, font_size)
-	End If
-	cvs.DrawText(icon, bmp.Width / 2, bmp.Height / 2 + h / 2, typ, font_size, color, "CENTER")
-	Return bmp
-End Sub
 
 Sub NavDrawer_NavigationItemSelected (MenuItem As ACMenuItem, DrawerGravity As Int)
 	

@@ -46,7 +46,7 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".partijen"
+			android:name=".partij_chart"
 			android:label="Mijn Moyenne"
 			android:screenOrientation="portrait">
 		</activity>
@@ -60,7 +60,7 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".partij_chart"
+			android:name=".partijen"
 			android:label="Mijn Moyenne"
 			android:screenOrientation="portrait">
 		</activity>

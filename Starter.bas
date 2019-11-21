@@ -24,7 +24,7 @@ Sub Process_Globals
 	Public partijSender As Object
 	Public partijDisciplineChanged As Boolean = False
 	Public partijNewDiscipline As String
-	Public disciplineId as String
+	Public disciplineId As String
 	
 End Sub
 
