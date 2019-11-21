@@ -53,12 +53,12 @@ Sub Activity_Create(FirstTime As Boolean)
 	If Starter.game_id <> "" Then
 		setGameData
 		toolbar.SubTitle = "Partij bewerken"
-	Else	
+	Else
 		toolbar.SubTitle = "Nieuwe partij"
+		lbl_date_time.Text = $"$Date{time}"$
+		lbl_date_time.Tag = time
 	End If
 	ime.ShowKeyboard(txt_locatie)
-	lbl_date_time.Text = $"$Date{time}"$
-	lbl_date_time.Tag = time
 End Sub
 
 Sub Activity_Resume
@@ -218,7 +218,7 @@ Sub showDatePicker
 	End If
 	
 	
-	result	= newDate.Show("Selecteer een datum" &CRLF, "Mijn moyenne", "Oke", "","Annuleer", Null)
+	result	= newDate.Show("Selecteer een speel datum" &CRLF, "Mijn moyenne", "Oke", "","Annuleer", Null)
 	
 	
 	If result = DialogResponse.POSITIVE Then
@@ -253,7 +253,7 @@ End Sub
 Sub resetFields
 	chk_groot.Checked = False
 	txt_locatie.Text = ""
-	txt_beurten.Text = 	""
+	'txt_beurten.Text = 	""
 	txt_caroms.Text = ""
 	txt_moyenne.Text = ""
 	txt_tegen.Text = ""

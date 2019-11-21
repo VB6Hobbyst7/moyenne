@@ -66,10 +66,13 @@ Sub genChart
 	For i = 0 To 11
 		chart.AddLineMultiplePoints(dataChart.month(i), Array As Double(chart.NumberFormat3(dataChart.gemCurr(i), 3), chart.NumberFormat3(dataChart.gemPrev(i), 3), chart.NumberFormat3(dataChart.gemCurrYear(i), 3), chart.NumberFormat3(dataChart.gemPrevYear(i), 3)), True)
 	Next
-
+	
 	
 	chart.IncludeLegend="BOTTOM"
+	
 	chart.SetBarMeanValueFormat(1, 3, 3, False)
+	
+	
 	chart.DrawChart
 	
 End Sub

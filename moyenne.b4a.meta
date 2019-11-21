@@ -34,6 +34,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=nieuwe_partij,Process_Globals,5,0,partijen,lbl_disci_Click,361,0,partijen,Activity_Create,57,0,partijen,toolbar_NavigationItemClick,76,0,partijen,lbl_partijen_found_Click,372,0,discipline,Activity_CreateMenu,244,3,discipline,chk_default_Click,240,0,discipline,toolbar_MenuItemClick,263,0,partijen,setupNavigation,66,6,partijen,toolbar_MenuItemClick,418,0
+NavigationStack=nieuwe_partij,showDatePicker,203,1,nieuwe_partij,setGameData,224,0,nieuwe_partij,Activity_Create,52,0,nieuwe_partij,btn_save_Click,178,0,nieuwe_partij,resetFields,249,0,Visual Designer,partij_chart.bal,-100,4,Visual Designer,clv_partijen.bal,-100,4,Visual Designer,partij_lijst.bal,-100,1,Visual Designer,nieuwe_partij.bal,-100,1,partij_chart,genChart,65,6
 SelectedBuild=0
 VisibleModules=1,2,3,4,5,6,7

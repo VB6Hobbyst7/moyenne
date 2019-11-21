@@ -4,12 +4,7 @@ ModulesStructureVersion=1
 Type=StaticCode
 Version=9.5
 @EndOfDesignText@
-'Code module
-'Subs in this code module will be accessible from all modules.
 Sub Process_Globals
-	'These global variables will be declared once when the application starts.
-	'These variables can be accessed from all modules.
-
 End Sub
 
 
@@ -31,3 +26,9 @@ Sub FontBit (icon As String, font_size As Float, color As Int, awesome As Boolea
 	cvs.DrawText(icon, bmp.Width / 2, bmp.Height / 2 + h / 2, typ, font_size, color, "CENTER")
 	Return bmp
 End Sub
+
+
+
+
+
+

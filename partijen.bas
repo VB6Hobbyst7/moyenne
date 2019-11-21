@@ -65,6 +65,8 @@ Sub Activity_Create(FirstTime As Boolean)
 	countPartijen
 End Sub
 
+
+	
 Sub setupNavigation
 	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
 	NavDrawer.InitDrawerToggle
@@ -264,8 +266,10 @@ Sub genPartij(location As String, beurten As String, caroms As String, moyenne A
 	lbl_datum.Text = DateTime.Date(date)
 	If clsDbe.curs.GetLong("tafel_groot") <> 1 Then
 		lbl_win.Visible = False
+	Else 
+		lbl_win.Visible = True
 	End If
-	totMoyenne = totMoyenne+moyenne
+ 	totMoyenne = totMoyenne+moyenne
 	totaal = totaal + 1
 	Return p
 End Sub

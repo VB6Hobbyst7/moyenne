@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="nl.pdeg.moyenne"
 	android:versionCode="1"
-	android:versionName="0.70"
+	android:versionName="0.71"
 	android:installLocation="internalOnly">
 	
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="28"/>
@@ -14,6 +14,7 @@
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
 		android:maxSdkVersion="18" />
+	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 	<application
 		android:label="Mijn Moyenne"
@@ -68,7 +69,7 @@
 		<receiver android:name=".starter$starter_BR">
 		</receiver>
 		<activity
-			android:windowSoftInputMode="stateHidden"
+			android:windowSoftInputMode="adjustResize|stateHidden"
 			android:launchMode="singleTop"
 			android:name=".discipline"
 			android:label="Mijn Moyenne"

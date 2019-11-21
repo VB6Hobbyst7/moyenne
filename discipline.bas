@@ -25,7 +25,7 @@ Sub Globals
 	Private clv_discipline As CustomListView
 	Private lbl_delete As Label
 	Private DetailsDialog As CustomLayoutDialog
-	Private txt_discipline_edit As EditText
+	Private txt_discipline_edit As B4XView
 	Private lbl_edit As Label
 	
 	Private chk_default As CheckBox
@@ -38,6 +38,7 @@ Sub Activity_Create(FirstTime As Boolean)
 	Activity.LoadLayout("discipline")
 	clsdbe.Initialize
 	clsFunc.Initialize
+	
 	ime.Initialize("")
 	createDisciplineList
 	
@@ -177,7 +178,8 @@ Sub addEdit(edit As Boolean, label As Label, id As String)
 	txt_discipline_edit.Text = label.Text
 	txt_discipline_edit.Enabled = True
 	If edit = False Then
-		txt_discipline_edit.Hint = "Nieuwe discipline"
+		'txt_discipline_edit.Hint 
+		txt_discipline_edit.EditTextHint= "Nieuwe discipline"
 	End If
 	txt_discipline_edit.RequestFocus
 	Wait For (sf) Dialog_Result(result As Int)
@@ -201,6 +203,7 @@ Sub countDisciplines
 End Sub
 
 Sub lbl_add_Click
+	
 	Dim label As Label
 	label.Initialize("")
 	addEdit(False, label, "")
