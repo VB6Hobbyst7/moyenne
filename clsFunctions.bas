@@ -7,6 +7,7 @@ Version=9.5
 Sub Class_Globals
 	Dim clvHeaderPrimaryColor As String =  0xFF05B80A
 	Dim clvHeaderHighlightColor As String =  0xFF0059FF
+	'dim activity as Activity
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -164,3 +165,6 @@ Sub BitmapToBitmapDrawable (bitmap As Bitmap) As BitmapDrawable
 	bd.Initialize(bitmap)
 	Return bd
 End Sub
+
+
+

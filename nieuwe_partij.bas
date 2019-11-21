@@ -10,13 +10,13 @@ Version=9.5
 #End Region
 #Extends: android.support.v7.app.AppCompatActivity
 Sub Process_Globals
-	Dim clsDbe As clsDb
-	Dim clsFunc As clsFunctions
 	Dim curs As Cursor
 	Dim spr_list As List
 	Dim discip As String
 	Dim beurten, caroms As Int
 	Dim date As Long
+	Dim clsDbe As clsDb
+	Dim clsFunc As clsFunctions
 	
 End Sub
 
