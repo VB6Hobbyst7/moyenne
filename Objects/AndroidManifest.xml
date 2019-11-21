@@ -14,7 +14,6 @@
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
 		android:maxSdkVersion="18" />
-	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 	<application
 		android:label="Mijn Moyenne"
@@ -46,7 +45,7 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".partijen"
+			android:name=".partij_chart"
 			android:label="Mijn Moyenne"
 			android:screenOrientation="portrait">
 		</activity>
@@ -60,7 +59,7 @@
 		<activity
 			android:windowSoftInputMode="stateHidden"
 			android:launchMode="singleTop"
-			android:name=".partij_chart"
+			android:name=".partijen"
 			android:label="Mijn Moyenne"
 			android:screenOrientation="portrait">
 		</activity>
