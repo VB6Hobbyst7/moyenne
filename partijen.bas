@@ -50,6 +50,8 @@ Sub Globals
 	Private lbl_win As Label
 	Private lbl_tot_gewonnen As Label
 	Private lbl_tot_verloren As Label
+	Private lbl_app_name As Label
+	Private lbl_version As Label
 End Sub
 
 Sub Activity_Create(FirstTime As Boolean)
@@ -57,13 +59,17 @@ Sub Activity_Create(FirstTime As Boolean)
 	
 	clsDbe.Initialize
 	clsFunc.Initialize
-	
+	lbl_version.Initialize("")
+	lbl_app_name.Initialize("")
+	lbl_app_name.Text = Application.LabelName
+	lbl_version.Text = Application.VersionName
 	setupNavigation
 '	getDisciplines
 '	getYears
 '	createPartijList
 '	countPartijen
-	Wait For(initiateData) Complete(result as Boolean)
+	Wait For(initiateData) Complete(result As Boolean)
+	lbl_version.Text = $"Versie ${Application.VersionName}"$
 End Sub
 
 
@@ -97,9 +103,15 @@ Sub toolbar_NavigationItemClick
 	If NavDrawer.IsDrawerOpen Then
 		NavDrawer.CloseDrawer
 	Else
+		lbl_app_name.Text = Application.LabelName
+		lbl_version.Text = $"Versie ${Application.VersionName}"$
 		NavDrawer.OpenDrawer
 	
 	End If
+End Sub
+
+Sub NavDrawer_DrawerOpened (DrawerGravity As Int)
+	lbl_version.Text = $"Versie ${Application.VersionName}"$
 End Sub
 
 Sub Activity_Resume
@@ -394,6 +406,9 @@ Sub lbl_partijen_found_Click
 	clsFunc.restoreData
 End Sub
 
+Sub toolbar_NavigationItemClick1
+	
+End Sub
 
 Sub NavDrawer_NavigationItemSelected (MenuItem As ACMenuItem, DrawerGravity As Int)
 	

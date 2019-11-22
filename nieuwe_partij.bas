@@ -189,7 +189,7 @@ Sub btn_save_Click
 	Else
 		clsDbe.updatePartij(txt_locatie.Text, txt_beurten.Text, txt_caroms.Text, txt_moyenne.Text, txt_tegen.Text, txt_caroms_tegen.Text, txt_moyenne_tegen.Text, date,groot)
 		clsDbe.closeConnection
-		ToastMessageShow("Partij opgeslagen", False)
+		clsFunc.createCustomToast("Partij opgeslagen")
 		
 		'DISCIPLINE CHANGED
 		If spr_discipline.SelectedItem <> Starter.disciplineName Then

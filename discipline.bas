@@ -25,7 +25,7 @@ Sub Globals
 	Private clv_discipline As CustomListView
 	Private lbl_delete As Label
 	Private DetailsDialog As CustomLayoutDialog
-	Private txt_discipline_edit As B4XView
+	Private txt_discipline_edit As EditText
 	Private lbl_edit As Label
 	
 	Private chk_default As CheckBox
@@ -175,7 +175,7 @@ End Sub
 
 Sub addEdit(edit As Boolean, label As Label, id As String)
 	Dim sf As Object = DetailsDialog.ShowAsync("", "Bewaar", "Annuleer", "", Null, True)
-
+ txt_discipline_edit.Initialize("")
 	txt_discipline_edit.Enabled = True
 	DetailsDialog.SetSize(100%X, 250dip)
 	Wait For (sf) Dialog_Ready(pnl As Panel)
@@ -184,7 +184,7 @@ Sub addEdit(edit As Boolean, label As Label, id As String)
 	txt_discipline_edit.Enabled = True
 	If edit = False Then
 		'txt_discipline_edit.Hint 
-		txt_discipline_edit.EditTextHint= "Nieuwe discipline"
+		txt_discipline_edit.Hint= "Nieuwe discipline"
 	End If
 	txt_discipline_edit.RequestFocus
 	ime.ShowKeyboard(txt_discipline_edit)

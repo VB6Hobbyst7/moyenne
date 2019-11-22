@@ -20,7 +20,7 @@ FileGroup11=Default Group
 FileGroup12=partijen
 FileGroup13=partijen
 FileGroup14=partijen
-FileGroup15=partijen
+FileGroup15=main
 FileGroup2=images
 FileGroup3=discipline
 FileGroup4=partijen
@@ -63,7 +63,7 @@ Version=9.5
 #Region  Project Attributes 
 	#ApplicationLabel: Mijn Moyenne
 	#VersionCode: 1
-	#VersionName: 0.71
+	#VersionName: 1.00
 	#SupportedOrientations: portrait
 	#CanInstallToExternalStorage: False
 #End Region

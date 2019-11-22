@@ -110,7 +110,7 @@ Sub processData
 	gemYear = clsDbe.curs.GetDouble("avg_gem")
 	clsDbe.closeConnection
 	For i = 0 To 11
-		dataChart.gemPrevYear(i) = gemYear'/12
+		dataChart.gemPrevYear(i) = gemYear' NumberFormat2(gemYear, 1, 3, 3 False)
 	Next
 	
 	
@@ -134,10 +134,11 @@ Sub processData
 	gemYear = clsDbe.curs.GetDouble("avg_gem")
 	clsDbe.closeConnection
 	'SET MOYENNE YEAR
+	Dim x As Double = NumberFormat2(gemYear,1,3,3, False)
 	For i = 0 To 11
-		dataChart.gemCurrYear(i) = gemYear'/12
+		dataChart.gemCurrYear(i) =  x'/12
 	Next
-
+	Log(x)
 	
 	
 End Sub
