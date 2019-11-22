@@ -76,6 +76,10 @@ End Sub
 
 
 Sub genDisciplineList(disci As String, id As String, width As Int, isDefault As String) As Panel
+	If isDefault = Null Then
+		isDefault = "0"
+	End If
+	
 	Dim p As Panel
 	p.Initialize("")
 	p.SetLayout(0,0, width, 100dip)
@@ -170,8 +174,9 @@ End Sub
 
 
 Sub addEdit(edit As Boolean, label As Label, id As String)
-	
 	Dim sf As Object = DetailsDialog.ShowAsync("", "Bewaar", "Annuleer", "", Null, True)
+
+	txt_discipline_edit.Enabled = True
 	DetailsDialog.SetSize(100%X, 250dip)
 	Wait For (sf) Dialog_Ready(pnl As Panel)
 	pnl.LoadLayout("discipline_edit")
@@ -182,8 +187,10 @@ Sub addEdit(edit As Boolean, label As Label, id As String)
 		txt_discipline_edit.EditTextHint= "Nieuwe discipline"
 	End If
 	txt_discipline_edit.RequestFocus
+	ime.ShowKeyboard(txt_discipline_edit)
 	Wait For (sf) Dialog_Result(result As Int)
 	
+	txt_discipline_edit.Enabled = False
 	If result = DialogResponse.POSITIVE Then
 		label.Text = txt_discipline_edit.Text
 		If edit = False Then
@@ -194,7 +201,6 @@ Sub addEdit(edit As Boolean, label As Label, id As String)
 			createDisciplineList
 		End If
 	End If
-	ime.HideKeyboard
 	countDisciplines
 End Sub
 

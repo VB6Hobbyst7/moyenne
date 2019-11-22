@@ -49,17 +49,20 @@ End Sub
 
 #Region discipline
 Sub addDiscipline(disc As String, disciId As String)
-	initDb
-	If disciplineExists(disc) = True Then
-		ToastMessageShow($"${disc} bestaat reeds"$, True)
-		Return
+	If disciId <> "" Then
+		If disciplineExists(disc) = True Then
+			ToastMessageShow($"${disc} bestaat reeds"$, True)
+			Return
+		End If
 	End If
+	initDb
+	
 	If disciId.Length > 8 Then
 		qry = "update disciplines set discipline = ? where id = ?"
 		sql.ExecNonQuery2(qry, Array As String(disc, disciId))
 	Else
 		disciId = Starter.clsFunc.UUIDv4
-		qry = "insert into disciplines (id, discipline) values (?,?,?)"
+		qry = "insert into disciplines (id, discipline, is_default) values (?,?,?)"
 		sql.ExecNonQuery2(qry, Array As String(disciId, disc, 0))
 	End If
 	
@@ -94,7 +97,7 @@ End Sub
 Sub retDisciplines As Cursor
 	initDb
 	
-	qry = "select * from disciplines order by is_default DESC"
+	qry = "select * from disciplines order by is_default DESC, discipline ASC"
 	curs = sql.ExecQuery(qry)
 	Return curs
 End Sub

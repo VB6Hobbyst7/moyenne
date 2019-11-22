@@ -59,13 +59,24 @@ Sub Activity_Create(FirstTime As Boolean)
 	clsFunc.Initialize
 	
 	setupNavigation
+'	getDisciplines
+'	getYears
+'	createPartijList
+'	countPartijen
+	Wait For(initiateData) Complete(result as Boolean)
+End Sub
+
+
+	
+Sub initiateData As ResumableSub
 	getDisciplines
 	getYears
 	createPartijList
 	countPartijen
+	Return True
+	
 End Sub
-
-
+	
 	
 Sub setupNavigation
 	NavDrawer.Initialize2("NavDrawer", Activity, NavDrawer.DefaultDrawerWidth, NavDrawer.GRAVITY_START)
@@ -229,15 +240,16 @@ Sub createPartijList
 	totMoyenne = 0
 	totaal = 0
 	
-	curs = clsDbe.retPartijen(discip, spr_year.SelectedItem)
+	Dim curs As Cursor = clsDbe.retPartijen(discip, spr_year.SelectedItem)
+	
 	clv_partijen.Clear
 	
-	For i = 0 To curs.RowCount -1
+	For i = 0 To clsDbe.curs.RowCount -1
 		curs.Position = i
 		If curs.GetString("moyenne") = "" Then
 			Continue
 		End If
-		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), curs.GetString("moyenne_opponent"), curs.GetLong("date_time"), curs.GetString("id"), viewWidth), "")
+		clv_partijen.Add(genPartij(curs.GetString("location"), curs.GetString("beurten"), curs.GetString("caroms"), curs.GetString("moyenne"), curs.GetString("opponent"), curs.GetString("caroms_opponent"), clsDbe.curs.GetString("moyenne_opponent"), clsDbe.curs.GetLong("date_time"), clsDbe.curs.GetString("id"), viewWidth), "")
 	Next
 	
 	If totMoyenne > 0 And totaal > 0 Then
@@ -246,13 +258,14 @@ Sub createPartijList
 		lbl_discipline_moyenne.Text = "Discipline gemiddelde : 0.000"
 	End If
 	curs.Close
-	clsDbe.closeConnection
+	'clsDbe.closeConnection
 End Sub
 
 Sub genPartij(location As String, beurten As String, caroms As String, moyenne As String, tegen As String, caroms_opponent As String, moyenne_opponent As String, date As Long, id As String, width As Int) As Panel
 	Dim p As Panel
 	p.Initialize("")
 	p.SetLayout(0,0, width, 220dip)
+	'p.SetLayoutAnimated(1300,0,0, width, 220dip)
 	p.LoadLayout("clv_partijen")
 	p.Tag = id
 	

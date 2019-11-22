@@ -100,18 +100,13 @@ End Sub
 
 Sub backupData
 	Dim FileName As String = "moyenne.db"
-	Dim backUpName As String = $"moyenne.${DateTime.Date(DateTime.Now)}.backup"$
-	
-	If File.Exists(Starter.share, FileName) Then
-		Log("PPPPPPP")
-	End If
-	
+	Dim backUpName As String
+		
+	DateTime.DateFormat = "dd_MM_yyyy_HH_mm"
+
+	backUpName = $"myMoyenne_$Date{DateTime.Now}.txt"$
 	
 	File.Copy(Starter.share, FileName, Starter.Provider.SharedFolder, backUpName)
-	
-	If File.Exists(Starter.Provider.SharedFolder, backUpName) Then
-		Log("PPPPPPP")
-	End If
 	
 	Dim in As Intent
 	in.Initialize(in.ACTION_SEND, "")
@@ -119,6 +114,8 @@ Sub backupData
 	in.PutExtra("android.intent.extra.STREAM", Starter.Provider.GetFileUri(backUpName))
 	in.Flags = 1 'FLAG_GRANT_READ_URI_PERMISSION
 	StartActivity(in)
+	
+	DateTime.DateFormat = "dd-MM-yyyy"
 End Sub
 
 Sub restoreData
@@ -137,9 +134,15 @@ Sub CC_Result (Success As Boolean, Dir As String, FileName As String)
 	
 		If response = DialogResponse.POSITIVE Then
 			File.Copy(Dir, FileName, Starter.share, "moyenne.db")
+			Wait For (File.CopyAsync(Dir, FileName, Starter.share, "moyenne.db")) Complete (Success As Boolean)
+			
+			If Success Then
+				createCustomToast("Data uit de backup terug gezet..")
+				Wait For(CallSub(partijen, "initiateData")) Complete(result As Boolean)
+			Else 
+				MsgboxAsync("Backup terug niet gezet", Application.LabelName)
+			End If
 		End If
-	Else
-		MsgboxAsync("Kan backup bestand laden", "Mijn Moyenne")
 	End If
 		
 End Sub
@@ -167,4 +170,46 @@ Sub BitmapToBitmapDrawable (bitmap As Bitmap) As BitmapDrawable
 End Sub
 
 
+'padText e.g. "9", padChar e.g. "0", padSide 0=left 1=right, padCount e.g. 2
+Public Sub padString(padText As String ,padChr As String, padSide As Int, padCount As Int) As String
+	Dim padStr As String
+	
+	If padText.Length = padCount Then
+		Return padText
+	End If
+	
+	For i = 1 To padCount
+		padStr = padStr&padChr
+	Next
+	
+	If padStr = 0 Then
+		Return padStr&padText
+	Else
+		Return padText&padStr
+	End If
+	
+End Sub
 
+
+Sub createCustomToast(txt As String)
+	Dim cs As CSBuilder
+	cs.Initialize.Typeface(Typeface.LoadFromAssets("Montserrat-Regular.ttf")).Color(Colors.White).Size(16).Append(txt).PopAll
+	ShowCustomToast(cs, True, clvHeaderHighlightColor)
+End Sub
+
+Sub ShowCustomToast(Text As Object, LongDuration As Boolean, BackgroundColor As Int)
+	Dim ctxt As JavaObject
+	ctxt.InitializeContext
+	Dim duration As Int
+	If LongDuration Then duration = 1 Else duration = 0
+	Dim toast As JavaObject
+	toast = toast.InitializeStatic("android.widget.Toast").RunMethod("makeText", Array(ctxt, Text, duration))
+	Dim v As View = toast.RunMethod("getView", Null)
+	Dim cd As ColorDrawable
+	cd.Initialize(BackgroundColor, 20dip)
+	v.Background = cd
+	'uncomment to show toast in the center:
+	 '  toast.RunMethod("setGravity", Array( _
+	  ' Bit.Or(Gravity.CENTER_HORIZONTAL, Gravity.CENTER_VERTICAL), 0, 0))
+	toast.RunMethod("show", Null)
+End Sub
