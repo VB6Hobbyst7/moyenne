@@ -8,11 +8,12 @@ Sub Class_Globals
 	Dim clvHeaderPrimaryColor As String =  0xFF05B80A
 	Dim clvHeaderHighlightColor As String =  0xFF0059FF
 	'dim activity as Activity
+	Dim cc As ContentChooser
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize
-	
+	cc.Initialize("cc")
 End Sub
 
 
@@ -119,8 +120,8 @@ Sub backupData
 End Sub
 
 Sub restoreData
-	Dim cc As ContentChooser
-	cc.Initialize("cc")
+'	Dim cc As ContentChooser
+'	cc.Initialize("cc")
 	cc.Show("text/*", "Selecteer backup")
 End Sub
 

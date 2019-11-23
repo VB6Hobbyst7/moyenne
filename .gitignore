@@ -2,7 +2,7 @@
 *.apk
 *.ap_
 *.zip
-*.meta
+/*.b4a.meta
 
 # Files for the Dalvik VM
 *.dex
@@ -15,6 +15,7 @@ bin/
 gen/
 src/
 b4xlibs/
+
 
 # Gradle files
 .gradle/

@@ -302,6 +302,8 @@ End Sub
 Sub getDisciplines
 	curs = clsDbe.retDisciplines
 	spr_list.Initialize
+	spr_list.Clear
+	spr_discipline.Clear
 	
 	For i = 0 To curs.RowCount -1
 		curs.Position = i

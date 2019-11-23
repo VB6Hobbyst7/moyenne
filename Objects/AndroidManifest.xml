@@ -14,6 +14,7 @@
 	<uses-permission
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"
 		android:maxSdkVersion="18" />
+	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 	<application
 		android:label="Mijn Moyenne"
@@ -50,6 +51,13 @@
 			android:screenOrientation="portrait">
 		</activity>
 		<activity
+			android:windowSoftInputMode="stateHidden"
+			android:launchMode="singleTop"
+			android:name=".partijen"
+			android:label="Mijn Moyenne"
+			android:screenOrientation="portrait">
+		</activity>
+		<activity
 			android:windowSoftInputMode="adjustResize|stateHidden"
 			android:launchMode="singleTop"
 			android:name=".nieuwe_partij"
@@ -57,9 +65,9 @@
 			android:screenOrientation="portrait">
 		</activity>
 		<activity
-			android:windowSoftInputMode="stateHidden"
+			android:windowSoftInputMode="adjustResize|stateHidden"
 			android:launchMode="singleTop"
-			android:name=".partijen"
+			android:name=".discipline"
 			android:label="Mijn Moyenne"
 			android:screenOrientation="portrait">
 		</activity>
@@ -67,12 +75,5 @@
 		</service>
 		<receiver android:name=".starter$starter_BR">
 		</receiver>
-		<activity
-			android:windowSoftInputMode="adjustResize|stateHidden"
-			android:launchMode="singleTop"
-			android:name=".discipline"
-			android:label="Mijn Moyenne"
-			android:screenOrientation="portrait">
-		</activity>
 	</application>
 </manifest>
