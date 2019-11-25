@@ -17,6 +17,7 @@ Public Sub Initialize
 End Sub
 
 
+
 Sub UUIDv4 As String
 	Dim sb As StringBuilder
 	sb.Initialize
@@ -32,6 +33,7 @@ Sub UUIDv4 As String
 	Next
 	Return sb.ToString.ToLowerCase
 End Sub
+
 
 
 Sub getPanelIndex(clv As CustomListView, sndr As Object) As Int
